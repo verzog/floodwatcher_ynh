@@ -22,16 +22,15 @@ fi
 #=================================================
 ynh_script_progression "Updating NGINX web server configuration..."
 
-ynh_change_url_nginx_config
+ynh_config_change_url_nginx
 
 #=================================================
 # LINKS IN NOTIFICATIONS
 #=================================================
 ynh_script_progression "Updating the app's settings..."
 
-# config.php holds the site's address for notification links (the template reads $domain).
-# shellcheck disable=SC2034
-domain="$new_domain"
+# config.php holds the site's address for notification links. YunoHost has already set $domain
+# to the new domain for this script.
 _fw_write_config
 
 #=================================================
