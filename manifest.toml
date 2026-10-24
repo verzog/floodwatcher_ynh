@@ -39,7 +39,7 @@ ram.runtime = "150M"
 [resources]
     [resources.sources.main]
     url = "https://github.com/verzog/floodwatcher/archive/refs/tags/v0.17.0.tar.gz"
-    sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+    sha256 = "8a2f70708acbc49c6d60c89519b940504f9ba0ee9ec6bd99750a8e44585e6f0f"
     autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
