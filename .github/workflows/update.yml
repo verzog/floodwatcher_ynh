@@ -1,0 +1,48 @@
+# Keeps this package pointing at the latest Flood Watcher release.
+#
+# Every night (and whenever "Run workflow" is pressed on the Actions tab) it checks
+# verzog/floodwatcher for a newer published release. If there is one, it runs tools/bump.sh,
+# which sets the version, download address and checksum in manifest.toml, and commits that.
+# It never touches a server: installed apps change only when someone runs
+# `yunohost app upgrade`.
+name: Update to the latest release
+
+on:
+  schedule:
+    - cron: '17 15 * * *'   # 01:17 Brisbane time.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare with the latest release
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh api repos/verzog/floodwatcher/releases/latest --jq .tag_name)"
+          latest="${tag#v}"
+          current="$(sed -nE 's/^version = "([0-9.]+)~ynh[0-9]+"/\1/p' manifest.toml)"
+          echo "Latest release: $latest. Package: $current."
+          if [ -z "$latest" ] || [ "$latest" = "$current" ]; then
+            echo "Nothing to do."
+          elif [ "$(printf '%s\n%s\n' "$current" "$latest" | sort -V | tail -n1)" = "$latest" ]; then
+            echo "newer=$latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "The package is ahead of the latest release; leaving it alone."
+          fi
+
+      - name: Point the package at it
+        if: steps.check.outputs.newer != ''
+        run: |
+          ./tools/bump.sh "${{ steps.check.outputs.newer }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Flood Watcher ${{ steps.check.outputs.newer }}"
+          git push
