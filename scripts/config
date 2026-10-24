@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# SAVING THE SETTINGS PAGE
+#=================================================
+
+# The settings page's values are stored as app settings by YunoHost; after saving them,
+# rewrite config.php so the collectors and the page use them from their next run.
+ynh_app_config_apply() {
+    _ynh_app_config_apply
+    _fw_write_config
+}
+
+ynh_app_config_run "$1"

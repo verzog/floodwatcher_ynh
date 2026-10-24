@@ -1,0 +1,43 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/config_panel.v1.schema.json
+
+version = "1.0"
+
+[main]
+name.en = "Flood Watcher settings"
+
+    [main.features]
+    name.en = "Features"
+
+        [main.features.push_enabled]
+        ask.en = "Push notifications"
+        help.en = "Lets visitors sign up for flood warnings and gauge alerts on their phone or computer, even with the page closed."
+        type = "boolean"
+
+        [main.features.community_rain]
+        ask.en = "Community rain gauges (Weather Underground)"
+        help.en = "Shows unofficial rain readings from home weather stations. Needs a Weather Underground API key below (you get one free with your own station)."
+        type = "boolean"
+
+    [main.keys]
+    name.en = "API keys"
+
+        [main.keys.keys_note]
+        type = "alert"
+        style = "info"
+        ask.en = "Keys are kept in the app's private settings and are never shown on the public site. Changes apply from the collectors' next run (within 15 minutes)."
+
+        [main.keys.wu_api_key]
+        ask.en = "Weather Underground API key"
+        help.en = "From your Weather Underground account (Member Settings > API Keys)."
+        type = "string"
+        optional = true
+        pattern.regexp = "^[A-Za-z0-9]*$"
+        pattern.error = "Letters and numbers only."
+
+        [main.keys.qldtraffic_api_key]
+        ask.en = "QLDTraffic API key"
+        help.en = "Your own key from the Department of Transport and Main Roads. Leave empty to use the shared public key (which is often over its request limit)."
+        type = "string"
+        optional = true
+        pattern.regexp = "^[A-Za-z0-9]*$"
+        pattern.error = "Letters and numbers only."

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# CHECK THE NEW ADDRESS
+#=================================================
+
+# The dashboard must sit at the top of its domain: it can move to another domain, but not
+# under a path.
+if [ "$new_path" != "/" ]; then
+    ynh_die "Flood Watcher needs a domain of its own: choose a domain with the path /."
+fi
+
+#=================================================
+# MODIFY URL IN NGINX CONF
+#=================================================
+ynh_script_progression "Updating NGINX web server configuration..."
+
+ynh_change_url_nginx_config
+
+#=================================================
+# LINKS IN NOTIFICATIONS
+#=================================================
+ynh_script_progression "Updating the app's settings..."
+
+# config.php holds the site's address for notification links (the template reads $domain).
+# shellcheck disable=SC2034
+domain="$new_domain"
+_fw_write_config
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Change of URL completed for $app"

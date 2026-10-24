@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source ../settings/scripts/_common.sh
+source /usr/share/yunohost/helpers
+
+ynh_print_info "Declaring files to be backed up..."
+
+#=================================================
+# CODE, DATA AND SYSTEM CONFIGURATION
+#=================================================
+
+ynh_backup "$install_dir"
+
+# State, push notification keys, history downloads, the dashboard's data files and your
+# config.local.php. Without the push keys, everyone's notification sign-ups stop working.
+ynh_backup "$data_dir"
+
+ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+ynh_backup "/etc/php/$php_version/fpm/pool.d/$app.conf"
+
+ynh_backup "/etc/cron.d/$app"
+
+ynh_backup "/etc/logrotate.d/$app"
+
+#=================================================
+# DATABASE
+#=================================================
+ynh_print_info "Backing up the database..."
+
+ynh_mysql_dump_db > db.sql
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

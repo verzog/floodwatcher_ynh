@@ -1,0 +1,20 @@
+# Flood Watcher collectors (YunoHost app __APP__). Written by the package: changes here are lost
+# on upgrade. Times are server time. Logs: /var/log/__APP__/collector.log
+PHP=/usr/bin/php__PHP_VERSION__
+DIR=__INSTALL_DIR__/bin
+LOG=/var/log/__APP__/collector.log
+
+# Council gauges every 10 minutes, then rebuild the dashboard data.
+*/10 * * * * __APP__ $PHP $DIR/collect_bcc.php >> $LOG 2>&1; $PHP $DIR/build_json.php >> $LOG 2>&1
+# Bureau of Meteorology gauges and flood warnings every 15 minutes.
+3-59/15 * * * * __APP__ $PHP $DIR/collect_bom.php >> $LOG 2>&1; $PHP $DIR/collect_warnings.php >> $LOG 2>&1; $PHP $DIR/build_json.php >> $LOG 2>&1
+# Queensland Government gauges every 30 minutes.
+7,37 * * * * __APP__ $PHP $DIR/collect_qld.php >> $LOG 2>&1; $PHP $DIR/build_json.php >> $LOG 2>&1
+# QLDTraffic road closures and flooding every 10 minutes.
+5-59/10 * * * * __APP__ $PHP $DIR/collect_traffic.php >> $LOG 2>&1
+# Weather Underground community rain every 15 minutes (does nothing unless switched on).
+9-59/15 * * * * __APP__ $PHP $DIR/collect_wu.php >> $LOG 2>&1
+# Flood maps: weekly (Sunday 3:17 am), plus a check every half hour that only downloads them if
+# they've never been downloaded (straight after install).
+17 3 * * 0 __APP__ $PHP $DIR/fetch_overlays.php >> $LOG 2>&1
+23,53 * * * * __APP__ $PHP $DIR/fetch_overlays.php if-missing >> $LOG 2>&1

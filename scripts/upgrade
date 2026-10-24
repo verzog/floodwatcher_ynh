@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# SETTINGS (new ones get their defaults)
+#=================================================
+
+_fw_default_settings
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Upgrading source files..."
+
+# Replace the code completely. Nothing to keep: config.php is rewritten below, and everything
+# the app writes lives in the data folder.
+ynh_setup_source --dest_dir="$install_dir" --full_replace
+
+_fw_write_config
+_fw_set_permissions
+
+#=================================================
+# SYSTEM CONFIGURATION
+#=================================================
+ynh_script_progression "Upgrading system configurations related to $app..."
+
+ynh_config_add_phpfpm
+
+ynh_config_add_nginx
+
+_fw_add_cron
+
+ynh_config_add_logrotate "/var/log/$app"
+
+#=================================================
+# DATABASE
+#=================================================
+ynh_script_progression "Upgrading the database..."
+
+_fw_setup_data
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Upgrade of $app completed"
