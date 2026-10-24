@@ -6,7 +6,7 @@ id = "floodwatcher"
 name = "Flood Watcher"
 description.en = "Community flood dashboard for the Brisbane River catchment: river levels, rain, warnings and alerts"
 
-version = "0.17.2~ynh1"
+version = "0.18.0~ynh1"
 
 maintainers = ["verzog"]
 
@@ -38,8 +38,8 @@ ram.runtime = "150M"
 
 [resources]
     [resources.sources.main]
-    url = "https://github.com/verzog/floodwatcher/archive/refs/tags/v0.17.2.tar.gz"
-    sha256 = "2bfebbccbedd024f38942fc55bd617e47e25c1f4e2577e77dbd744679fb43d31"
+    url = "https://github.com/verzog/floodwatcher/archive/refs/tags/v0.18.0.tar.gz"
+    sha256 = "686168334867b98e88189aa6662ed66cf6134245ea99c0a7512b961229e9f6e5"
     autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
