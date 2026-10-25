@@ -38,7 +38,22 @@ $cfg = $config['catchments'];
 $public = $config['public_data_dir'];
 $private = sfw_var_dir() . '/catchments.json';
 if (($argv[1] ?? '') === 'if-missing' && is_file($private) && is_file("{$public}/catchments.json")) {
-    exit(0); // Already downloaded; the weekly run keeps them up to date.
+    // Skip only if the saved files already cover exactly the configured live catchments. If the
+    // live list has changed (a catchment added or a key renamed), fall through and rebuild now
+    // instead of waiting for the weekly run, so an upgrade makes the new catchments usable at once.
+    $saved = json_decode((string) @file_get_contents($private), true);
+    $savedlive = [];
+    foreach ($saved['catchments'] ?? [] as $key => $c) {
+        if (($c['status'] ?? '') === 'live') {
+            $savedlive[(string) $key] = true;
+        }
+    }
+    $wantlive = array_fill_keys(array_map('strval', array_keys($cfg['live'])), true);
+    ksort($savedlive);
+    ksort($wantlive);
+    if ($savedlive === $wantlive) {
+        exit(0); // Already downloaded and the live set is unchanged; the weekly run keeps them fresh.
+    }
 }
 $lock = sfw_lock('fetch_catchments');
 $runid = sfw_run_start('basins'); // Run log names are at most 8 characters.

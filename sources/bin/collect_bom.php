@@ -129,10 +129,15 @@ try {
         $counts = [];
         $db->beginTransaction();
         foreach ($river as $g) {
+            // A gauge in the Brisbane BoM group (less the historical exclude list) is the Brisbane
+            // River's. Every other gauge -- including one excluded from Brisbane, such as the Pine
+            // and Caboolture River gauges -- is placed by which live catchment's outline it falls
+            // in, so those excluded gauges now reach their own catchment instead of being dropped.
             $catchment = null;
-            if (!isset($exclude[$g['id']])) {
-                $catchment = $g['group'] === $cfg['river_group'] ? 'brisbane'
-                    : ($others ? sfw_catchment_at($config, $g['lat'], $g['lon'], $others) : null);
+            if ($g['group'] === $cfg['river_group'] && !isset($exclude[$g['id']])) {
+                $catchment = 'brisbane';
+            } elseif ($others) {
+                $catchment = sfw_catchment_at($config, $g['lat'], $g['lon'], $others);
             }
             $allriver[] = $g + ['in' => $catchment !== null, 'catchment' => $catchment];
             if ($catchment === null) {
