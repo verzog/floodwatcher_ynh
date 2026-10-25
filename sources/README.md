@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.22
+# Flood Watcher (SEQ Flood Watch) — version 0.19.23
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,14 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.23
+
+- **Rainfall for the Balonne–Condamine.** Added the catchment's BoM rain pages — the past-hour and
+  since-9am tiles (IDQ65339/40, 65347/48, 65349/50, 65351/52, 65430/31), classified by period with
+  `discover_catchment.php` rather than guessed. The 24-hour tiles are not used (the dashboard totals
+  its own 24 hours from the stored hourly readings). The tiles overlap, so this is full coverage of
+  the catchment's rain gauges. After upgrading, run `collect_bom.php refresh` then `build_json.php`.
 
 ## Changes in 0.19.22
 

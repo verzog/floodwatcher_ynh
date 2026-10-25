@@ -53,9 +53,15 @@ return [
             'IDQ65329.html'],
         // Rain pages come in threes: 24 hours, since 9am and past hour (checked 25/10/2026 from the
         // period each gauge's figure covers). South-east Queensland: IDQ65413-15; Wide Bay and
-        // Burnett, with the Mary River: IDQ65421-23.
-        'rain_maps'         => ['IDQ65415.html', 'IDQ65423.html'],
-        'rain_9am_maps'     => ['IDQ65414.html', 'IDQ65422.html'],
+        // Burnett, with the Mary River: IDQ65421-23. The inland Condamine–Balonne spans five BoM
+        // rain tiles (IDQ65339/40, 65347/48, 65349/50, 65351/52, 65430/31; period-checked by
+        // bin/discover_catchment.php condamine, 25/10/2026). The tiles overlap, so this is full
+        // coverage rather than a minimal set; only the past-hour and since-9am tiles are used (the
+        // dashboard totals its own 24 hours from the stored hourly readings).
+        'rain_maps'         => ['IDQ65415.html', 'IDQ65423.html', 'IDQ65340.html', 'IDQ65348.html',
+            'IDQ65350.html', 'IDQ65352.html', 'IDQ65431.html'],
+        'rain_9am_maps'     => ['IDQ65414.html', 'IDQ65422.html', 'IDQ65339.html', 'IDQ65347.html',
+            'IDQ65349.html', 'IDQ65351.html', 'IDQ65430.html'],
         // Brisbane River gauges: BoM's Brisbane/Moreton gauge group, less data/bom_exclude.csv. Gauges
         // for the other live catchments are those inside the catchment's outline (lib/catchments.php).
         'river_group'       => 'IDQ65389',
