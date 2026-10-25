@@ -2359,8 +2359,12 @@
    * (remembered in this browser), or the one on screen now if it's live.
    */
   function warnCatchment() {
+    // While subscribed, keep the catchment chosen when the box was ticked (saved in this browser),
+    // so the label matches what you actually get. When not subscribed, follow the catchment on
+    // screen, so the label -- and what ticking the box would subscribe to -- is the one you're
+    // looking at, rather than a stale choice from an earlier visit to another catchment.
     var saved = (memGet(NOTIFY_KEY) || {}).warnCatchment;
-    if (saved && catchmentLive(saved)) { return saved; }
+    if (push.sub && saved && catchmentLive(saved)) { return saved; }
     return catchmentLive(state.catchment) ? state.catchment : 'brisbane';
   }
 
