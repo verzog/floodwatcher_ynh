@@ -1424,6 +1424,14 @@ body.panel-open .panel-tab-arrow { transform: rotate(180deg); }
 
 .reset-control:hover { background: var(--water-soft); }
 
+/* "Hide normal" reads as pressed while it is on, so it's clear gauges are being hidden. */
+.declutter-control[aria-pressed="true"] {
+  background: var(--water);
+  color: #ffffff;
+  border-color: var(--water);
+}
+.declutter-control[aria-pressed="true"]:hover { background: var(--water); }
+
 .map-info {
   max-width: 260px;
   padding: 5px 9px;
