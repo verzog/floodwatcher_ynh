@@ -104,10 +104,24 @@ try {
         } elseif ($rn) {
             $rainpages[] = $page;
             // Which of the three a rain page is, from the period each gauge's figure covers (the
-            // 6th popup argument): all 1 = past hour (rain_maps), all 24 = 24 hours (not used),
-            // mixed small numbers = since 9am (rain_9am_maps).
+            // 6th popup argument): all 24 = 24 hours (not used), mixed small numbers = since 9am
+            // (rain_9am_maps), all 1 = past hour (rain_maps). The catch: a since-9am page read
+            // within an hour of 9am also shows ~1 hour, so elapsed hours alone can't tell the two
+            // apart just after the 9am (Brisbane) reset. Only in that window do we flag it as
+            // ambiguous rather than guess; at any other time an all-1-hour page is genuinely
+            // past-hour (a since-9am page would show more hours by then).
             $hrs = array_map(static fn(array $g): int => (int) $g['hours'], $rn);
-            $period = max($hrs) <= 1 ? 'past hour' : (min($hrs) >= 24 ? '24 hours' : 'since 9am');
+            $bnehour = (int) gmdate('G', time() + (int) $config['qld']['tz_offset_hours'] * 3600);
+            $nearreset = $bnehour >= 9 && $bnehour < 11;
+            if (min($hrs) >= 24) {
+                $period = '24 hours';
+            } elseif (max($hrs) > 1) {
+                $period = 'since 9am';
+            } elseif ($nearreset) {
+                $period = 'past hour or since 9am (ambiguous near 9am — re-run after ~11am Brisbane)';
+            } else {
+                $period = 'past hour';
+            }
             $rainperiods[$page] = $period;
             $title = preg_match('#<title>\s*([^<]{1,120})#i', $html, $tm) ? ' "' . trim($tm[1]) . '"' : '';
             $say(sprintf('   %s%s: %d rain gauges inside (period: %s)', $page, $title, count($rn), $period));
@@ -146,6 +160,12 @@ try {
             (array) $config['bom']['rain_9am_maps'], $nine)))) . "'],  // since 9am");
         if ($day) {
             $say('   (24-hour pages, not added: ' . implode(', ', $day) . ')');
+        }
+        $amb = array_keys(array_filter($rainperiods, static fn(string $p): bool =>
+            $p !== 'past hour' && $p !== 'since 9am' && $p !== '24 hours'));
+        if ($amb) {
+            $say('   (left out, period unclear near the 9am reset — re-run after ~11am Brisbane: '
+                . implode(', ', $amb) . ')');
         }
     }
 } catch (Throwable $e) {
