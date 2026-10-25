@@ -38,6 +38,7 @@
   --ov-floodplain_mary: #b8477a;
   --ov-floodplain_goldcoast: #b8477a;
   --ov-floodplain_logan: #b8477a;
+  --ov-floodplain_burnett: #b8477a;
   --ov-areas: #2f7fb8;     /* Council flood areas. */
   --ov-flood2011: #7b4fc9;
   --ov-flood2022: #0f9488;
@@ -56,6 +57,7 @@
     --ov-floodplain_mary: #e07aa8;
     --ov-floodplain_goldcoast: #e07aa8;
     --ov-floodplain_logan: #e07aa8;
+    --ov-floodplain_burnett: #e07aa8;
     --ov-catchment: #e6eef2;
     --predict: #c39cf0;
     --predict-bg: #4a2270;
