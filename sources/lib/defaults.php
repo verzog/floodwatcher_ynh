@@ -128,6 +128,9 @@ return [
             'burnett'    => ['name' => 'Burnett River', 'basin' => '136'],
             'kolan'      => ['name' => 'Kolan River', 'basin' => '135'],
             'baffle'     => ['name' => 'Baffle Creek', 'basin' => '134'],
+            // Inland (Murray–Darling): mostly state (WMIP) gauges, its own BoM map pages, and
+            // Sunwater dams (no feed yet). Basin 422 on the state map ("Balonne-Condamine").
+            'condamine'  => ['name' => 'Balonne–Condamine', 'basin' => '422'],
         ],
     ],
 
