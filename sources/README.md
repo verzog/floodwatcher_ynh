@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.17
+# Flood Watcher (SEQ Flood Watch) — version 0.19.18
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,15 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.18
+
+- **River network for the Gold Coast and Logan–Albert** (`data/network.csv`): the main rivers'
+  gauges, upstream to downstream, so the "water coming here" score and the "flood upstream" notice
+  reach across these catchments, and the dams (Hinze, Little Nerang, Wyaralong, Maroon) now feed
+  their releases into it. **Draft:** most joins are marked `check` and need confirming by someone
+  who knows the rivers — the Logan's weir order especially. Small urban creeks and tidal/lake
+  gauges are left out for now.
 
 ## Changes in 0.19.17
 
