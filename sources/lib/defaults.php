@@ -76,7 +76,7 @@ return [
                 'Logan River', 'Albert River', 'Beaudesert', 'Logan Village', 'Waterford', 'Maclean Bridge',
                 'Canungra Creek', 'Teviot Brook', 'Cedar Grove', 'Wyaralong', 'Round Mountain',
             ],
-            'southcoast' => [
+            'goldcoast' => [
                 'Nerang River', 'Coomera River', 'Tallebudgera Creek', 'Currumbin Creek', 'Pimpama River',
                 'Mudgeeraba Creek', 'Hinze Dam', 'Gold Coast', 'Nerang', 'Oxenford',
             ],
@@ -119,9 +119,9 @@ return [
         'live'           => [
             'brisbane'   => ['name' => 'Brisbane River', 'basin' => '143'],
             'logan'      => ['name' => 'Logan and Albert Rivers', 'basin' => '145'],
-            'southcoast' => ['name' => 'Gold Coast rivers', 'basin' => '146'],
+            'goldcoast'  => ['name' => 'Gold Coast rivers', 'basin' => '146'],
             'pine'       => ['name' => 'Pine and Caboolture Rivers', 'basin' => '142'],
-            'maroochy'   => ['name' => 'Maroochy and Mooloolah Rivers', 'basin' => '141'],
+            'maroochy'   => ['name' => 'Maroochy River', 'basin' => '141'],
             'noosa'      => ['name' => 'Noosa River', 'basin' => '140'],
             'mary'       => ['name' => 'Mary River', 'basin' => '138'],
             'burrum'     => ['name' => 'Burrum and Isis Rivers', 'basin' => '137'],
@@ -245,7 +245,7 @@ return [
         'councils'     => [
             'brisbane'   => ['Brisbane City', 'Ipswich City', 'Lockyer Valley', 'Somerset', 'Toowoomba', 'Scenic Rim'],
             'logan'      => ['Logan City', 'Scenic Rim', 'Gold Coast', 'Ipswich City'],
-            'southcoast' => ['Gold Coast'],
+            'goldcoast'  => ['Gold Coast'],
             'pine'       => ['Moreton Bay'],
             'maroochy'   => ['Sunshine Coast'],
             'noosa'      => ['Noosa', 'Sunshine Coast'],
