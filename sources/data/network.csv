@@ -242,9 +242,9 @@ B541039-H,B041537-H,,Brosnans Barn to Killarney; check: headwater
 B041535-H,B041536-H,,Elbow Valley; check: upper Condamine, joins near Warwick
 B041537-H,B041536-H,,Killarney to Murrays Bridge; check
 B041536-H,B541137-H,,Murrays Bridge to Harrisons Road; check
-B541137-H,B041534-H,,Harrisons Road to Warwick; check
-B041534-H,B041503-H,,Warwick to Scots College
-B041503-H,B041473-H,,Scots College to Pratten; check
+B541137-H,B041503-H,,Harrisons Road to Scots College; check
+B041503-H,B041534-H,,Scots College to Warwick (Scots College is upstream, east of the town gauge)
+B041534-H,B041473-H,,Warwick to Pratten; check
 B041473-H,B541038-H,,Pratten to Talgai Weir; check
 B541038-H,B541050-H,,Talgai Weir to Millbrook; check
 B541050-H,B041499-H,,Millbrook to Tummaville; check
@@ -295,7 +295,7 @@ B543025-H,B543010-H,,Knayers Lane to Roma; check
 B543010-H,B043077-H,,Roma to Garrabarra; check
 B043077-H,B043101-H,,Bungil Creek at Garrabarra; check: joins the Balonne near Weribone
 B543026-H,B543010-H,,Mooga Creek; check: joins Bungil Creek near Roma
-B043080-H,B043077-H,,Muckadilla Creek; check: joins Bungil Creek
+B043080-H,B543005-H,,Muckadilla Creek; check: via the Cogoon River to the Balonne near Surat (not Bungil Creek)
 B543008-H,B043052-H,,Yuleba Creek; check: joins the Balonne near Warkon
 # ---- Dogwood Creek (Miles; joins the Condamine near Condamine town) ----
 B542016-H,B042049-H,,Dogwood Creek, Myall Park Rd to Miles; check
@@ -349,6 +349,6 @@ B041530-H,B041534-H,,Swan Creek at Yangan; check: joins the Condamine near Warwi
 B041533-H,B041534-H,,Emu Creek at Emu Vale; check: joins the Condamine near Warwick
 B041531-H,B541098-H,,Glengallan Creek to Rocky Ridge; check
 B541098-H,B041534-H,,Glengallan Creek at Rocky Ridge; check: joins the Condamine near Warwick
-B041532-H,B541055-H,dam,Connolly Dam into Leslie Dam (Sandy Creek); check
+B041532-H,B041534-H,,Connolly Dam (Rosenthal Creek, separate from Sandy Creek); check: joins the Condamine near Warwick
 B541055-H,B541037-H,,Leslie Dam to its tailwater
-B541037-H,B041534-H,,Sandy Creek below Leslie Dam; check: joins the Condamine near Warwick
+B541037-H,B041473-H,,Sandy Creek below Leslie Dam; check: joins the Condamine below Warwick, above Pratten
