@@ -44,7 +44,13 @@ return [
         // past-hour totals; totals since 9am). The first of each is BoM's south-east Queensland map;
         // add the pages bin/discover_catchment.php finds for other catchments.
         // IDQ65420: the Wide Bay and Burnett map, with the whole Mary River (checked 25/10/2026).
-        'river_maps'        => ['IDQ65412.html', 'IDQ65420.html'],
+        // IDQ65323/65325/65329: the inland Condamine–Balonne pages (lower Balonne, Maranoa and
+        // Border rivers; the upper Condamine around Warwick; and the middle Condamine around
+        // Dalby, Chinchilla and Roma). From bin/discover_catchment.php condamine, 25/10/2026:
+        // these three cover every Condamine river gauge it found. Gauges outside a live
+        // catchment's outline (e.g. NSW Border Rivers) are dropped by collect_bom.
+        'river_maps'        => ['IDQ65412.html', 'IDQ65420.html', 'IDQ65323.html', 'IDQ65325.html',
+            'IDQ65329.html'],
         // Rain pages come in threes: 24 hours, since 9am and past hour (checked 25/10/2026 from the
         // period each gauge's figure covers). South-east Queensland: IDQ65413-15; Wide Bay and
         // Burnett, with the Mary River: IDQ65421-23.
@@ -103,6 +109,18 @@ return [
             ],
             'baffle' => [
                 'Baffle Creek', 'Rosedale', 'Miriam Vale', 'Littabella',
+            ],
+            // Condamine–Balonne (inland). River/creek and town names from the discover run; a few
+            // generic creek names (Emu, Sandy) and collision-prone tokens (Tara → Tarampa) are left
+            // out and the towns used instead, so a Brisbane or Lockyer warning isn't mis-tagged.
+            'condamine' => [
+                'Condamine River', 'Balonne River', 'Maranoa River', 'Culgoa River', 'Bokhara River',
+                'Narran River', 'Ballandool', 'Briarie Creek', 'Wallam Creek', 'Nebine Creek',
+                'Bungil Creek', 'Dogwood Creek', 'Charleys Creek', 'Myall Creek', 'Dalrymple Creek',
+                'Warwick', 'Toowoomba', 'Dalby', 'Chinchilla', 'Miles', 'Roma', 'Mitchell', 'Surat',
+                'St George', 'Dirranbandi', 'Bollon', 'Condamine', 'Allora', 'Clifton', 'Pittsworth',
+                'Oakey', 'Jandowae', 'Cecil Plains', 'Killarney', 'Leslie Dam', 'Beardmore',
+                'Chinchilla Weir',
             ],
         ],
     ],
@@ -238,6 +256,23 @@ return [
                 'catchment' => 'burnett',
             ],
             [
+                'key'    => 'floodplain_condamine',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Condamine–Balonne's own sub-basins (bin/discover_catchment.php condamine,
+                // 25/10/2026). The big inland box also lists neighbours (Moonie, Macintyre & Weir,
+                // Warrego, Nebine, Border rivers); those belong to other basins and are left out.
+                'where'  => "sub_name IN ('Condamine River','Balonne River','Maranoa River')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'condamine',
+            ],
+            [
                 'key'    => 'areas',
                 'label'  => 'Areas that can flood (Brisbane)',
                 'hover'  => 'Council flood awareness area',
@@ -311,6 +346,7 @@ return [
             'burnett'    => ['Bundaberg', 'North Burnett', 'South Burnett', 'Gladstone'],
             'kolan'      => ['Bundaberg'],
             'baffle'     => ['Gladstone', 'Bundaberg'],
+            'condamine'  => ['Toowoomba', 'Western Downs', 'Southern Downs', 'Maranoa', 'Balonne'],
         ],
         'types_all'    => ['Flooding'],          // Always shown.
         'types_closed' => ['Hazard', 'Crash'],   // Shown only when the road is closed.
