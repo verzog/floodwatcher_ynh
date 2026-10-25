@@ -454,7 +454,7 @@ return [
                 'level' => 'B540610-H', 'tail' => null, 'fsl' => null, 'node' => 'B540610-H', 'catchment' => 'goldcoast'],
             ['key' => 'littlenerang', 'name' => 'Little Nerang Dam', 'seqwater' => 'Little Nerang', 'lat' => -28.1467,
                 'lon' => 153.2850, 'level' => 'B540054-H', 'tail' => null, 'fsl' => null, 'node' => 'B540054-H',
-                'catchment' => 'goldcoast'],
+                'into' => 'B540610-H', 'catchment' => 'goldcoast'],
             ['key' => 'wyaralong', 'name' => 'Wyaralong Dam', 'seqwater' => 'Wyaralong', 'lat' => -27.9092,
                 'lon' => 152.8806, 'level' => 'B540512-H', 'tail' => null, 'fsl' => null, 'node' => 'B540512-H',
                 'catchment' => 'logan'],

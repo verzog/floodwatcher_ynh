@@ -159,7 +159,7 @@ B040846-H,B540319-H,,Clearview to Carrara
 B540319-H,B540318-H,,Carrara to Evandale
 B540318-H,B040881-H,,Evandale to Air Sea Rescue (tidal)
 # ---- Little Nerang Creek ----
-B540054-H,B040846-H,,Little Nerang Dam; check: Little Nerang Creek joins the Nerang below Hinze near Gilston
+B540054-H,B540610-H,dam,Little Nerang Dam into Hinze Dam (Little Nerang Creek joins inside Advancetown Lake)
 # ---- Mudgeeraba Creek ----
 B540440-H,B540399-H,,Neranwood to Springbrook Road; check
 B540399-H,B540254-H,,Springbrook Road to Mudgeeraba; check
