@@ -214,6 +214,27 @@ return [
                 'catchment' => 'logan',
             ],
             [
+                'key'    => 'floodplain_burnett',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Burnett's sub-basins in this layer (bin/discover_catchment.php burnett, 25/10/2026).
+                // The big box also returns many neighbours (Baffle, Burrum, Kolan, Mary, Brisbane, the
+                // inland rivers) and a standalone 'Boyne River' that is the Gladstone Boyne (basin 133),
+                // all left out; the Burnett's own Boyne is in 'Boyne - Auburn Rivers'. These sub-basin
+                // names are Burnett-specific, so (as for the other catchments) the where clause scopes
+                // it without needing box_of/clip.
+                'where'  => "sub_name IN ('Upper Burnett River','Lower Burnett River',"
+                    . "'Barker - Barambah Creeks','Boyne - Auburn Rivers')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'burnett',
+            ],
+            [
                 'key'    => 'areas',
                 'label'  => 'Areas that can flood (Brisbane)',
                 'hover'  => 'Council flood awareness area',

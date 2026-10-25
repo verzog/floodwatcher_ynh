@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.16
+# Flood Watcher (SEQ Flood Watch) — version 0.19.17
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,14 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.17
+
+- **Flood-map overlay for the Burnett** catchment (state FloodCheck broad-scale floodplain), from
+  `discover_catchment.php burnett skip-state`. Scoped to the Burnett's own sub-basins (Upper/Lower
+  Burnett River, Barker–Barambah Creeks, Boyne–Auburn Rivers). After upgrading, fetch it on the
+  server with `fetch_overlays.php floodplain_burnett`. The Burnett is outside south-east Queensland,
+  so it has no Seqwater dams.
 
 ## Changes in 0.19.16
 
