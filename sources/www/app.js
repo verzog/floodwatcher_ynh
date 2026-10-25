@@ -344,12 +344,31 @@
     return marker;
   }
 
+  /**
+   * When "Hide normal" is on, is this gauge worth keeping on the map? Keep anything that isn't a
+   * plain, steady, below-flood reading: floods, rising (non-tidal) gauges, faulty or not-reporting
+   * ones, rain gauges with rain over the chosen period, and any gauge on the watch list.
+   */
+  function interesting(s) {
+    if (isWatched(s.id)) { return true; }
+    if (s.note || s.stale) { return true; } // Faulty "?" or not reporting.
+    if (s.type === 'stream') {
+      if (flooding(s.flood_class)) { return true; }
+      // A fully tidal gauge rises and falls with every tide, so "rising" there is normal.
+      if (s.tidal !== 'yes' && (s.trend === 'rising' || s.trend === 'rising_fast')) { return true; }
+      return false;
+    }
+    var mm = s[state.rainKey];
+    return typeof mm === 'number' && mm > 0;
+  }
+
   /** Redraw the markers of the catchment on screen from the current data. */
   function drawMarkers() {
     state.streamLayer.clearLayers();
     state.rainLayer.clearLayers();
     state.data.sensors.forEach(function (s) {
       if (!inCatchment(s)) { return; }
+      if (state.declutter && !interesting(s)) { return; }
       var marker = s.type === 'stream' ? streamMarker(s) : rainMarker(s);
       marker.on('click', function () { select(s.id); });
       (s.community ? state.communityLayer : s.type === 'stream' ? state.streamLayer : state.rainLayer).addLayer(marker);
@@ -3011,6 +3030,42 @@
     }
   });
   map.addControl(new ResetControl());
+
+  // "Hide normal" / "Show all": a toggle under Reset that thins the map down to the gauges doing
+  // something (floods, rising, faulty, watched; rain gauges with rain), remembered in this browser.
+  var DECLUTTER_KEY = 'floodwatcher.declutter';
+  state.declutter = memGet(DECLUTTER_KEY) === true;
+  var declutterBtn = null;
+  function syncDeclutterBtn() {
+    if (!declutterBtn) { return; }
+    declutterBtn.textContent = state.declutter ? '☰ Show all' : '☰ Hide normal';
+    declutterBtn.title = state.declutter
+      ? 'Show every gauge again'
+      : 'Hide steady, below-flood gauges and dry rain gauges; keep floods, rising, faulty and watched';
+    declutterBtn.setAttribute('aria-pressed', state.declutter ? 'true' : 'false');
+  }
+  function toggleDeclutter() {
+    state.declutter = !state.declutter;
+    memSet(DECLUTTER_KEY, state.declutter);
+    syncDeclutterBtn();
+    if (state.data) {
+      drawMarkers();
+      if (state.selected) { select(state.selected); }
+    }
+  }
+  var DeclutterControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd: function () {
+      var btn = L.DomUtil.create('button', 'reset-control declutter-control');
+      btn.type = 'button';
+      L.DomEvent.disableClickPropagation(btn);
+      L.DomEvent.on(btn, 'click', toggleDeclutter);
+      declutterBtn = btn;
+      syncDeclutterBtn();
+      return btn;
+    }
+  });
+  map.addControl(new DeclutterControl());
 
   // ---------- Freshness and loading ----------
 
