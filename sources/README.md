@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.18
+# Flood Watcher (SEQ Flood Watch) — version 0.19.19
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,15 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.19
+
+- **Compare two catchments on the one map.** A "+ compare…" chooser beside the catchment picker
+  adds a second catchment's gauges, outline, flood maps, roads and alerts alongside the first, with
+  the map zoomed to fit both. The choice is kept in the address (`?c=brisbane&with=logan`) and
+  remembered in the browser; on a small screen the map zooms out to fit both, with a note. Choose
+  "+ compare…" → none to clear it. With no second catchment chosen, the page behaves exactly as
+  before.
 
 ## Changes in 0.19.18
 
