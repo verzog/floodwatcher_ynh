@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.19
+# Flood Watcher (SEQ Flood Watch) — version 0.19.20
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,15 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.20
+
+- **Balonne–Condamine catchment added (outline only, for now).** The inland Balonne–Condamine
+  (state basin 422) is now a live catchment: its outline draws and it's selectable (`?c=condamine`).
+  It's a Murray–Darling catchment, so it fills in differently from the coastal ones — its gauges
+  are mostly state (WMIP) stations and it has its own BoM map pages; those, the flood map, the
+  river network and road closures come in following releases once `discover_catchment.php condamine`
+  has been run on the server. (Sunwater dams in this catchment have no feed we can read yet.)
 
 ## Changes in 0.19.19
 
