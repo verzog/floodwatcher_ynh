@@ -1,0 +1,108 @@
+# Flood Watcher checks: PHP syntax on every supported version, the settings-merge unit test, the
+# page scripts' syntax, a full mock-pipeline smoke test, and that the app and package versions
+# agree. The app code lives in sources/ (one repo; the YunoHost package installs it from there).
+name: Checks
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, mbstring, xml, pdo_mysql, openssl
+          coverage: none
+      - name: PHP syntax
+        run: find sources dev -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Settings-merge unit test
+        run: php dev/test_settings_merge.php
+
+  page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Page script syntax
+        run: node --check sources/www/app.js && node --check sources/www/sw.js
+
+  versions:
+    # The app's version.php and the package manifest version must agree (minus the ~ynhN suffix).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: version.php matches manifest
+        run: |
+          app="$(php -r 'echo require "sources/version.php";')"
+          pkg="$(sed -n 's/^version = "\(.*\)~ynh[0-9]*"/\1/p' manifest.toml)"
+          if [ "$app" != "$pkg" ]; then
+            echo "sources/version.php ($app) does not match manifest version ($pkg)." >&2
+            exit 1
+          fi
+          echo "versions agree: $app"
+
+  smoke:
+    # Run the whole collector pipeline (in sources/) against the dev mocks and check the dashboard
+    # JSON builds. Exercises the code against saved copies of the real services, so a change that
+    # breaks the pipeline fails here instead of only on the live server.
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: floodwatcher_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, mbstring, xml, pdo_mysql, openssl
+          coverage: none
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install pyftpdlib (for the BoM FTP mock)
+        run: pip install pyftpdlib
+      - name: Run the pipeline against the mocks and check the output
+        env:
+          FW_DB_HOST: 127.0.0.1
+          FW_DB_USER: root
+          FW_DB_PASSWORD: root
+          FW_DB_NAME: floodwatcher_test
+          FW_TEST_DIR: ${{ runner.temp }}/fw-test
+          SFW_CONFIG: ${{ github.workspace }}/dev/config.test.php
+          SFW_CODE_DIR: ${{ github.workspace }}/sources
+        run: |
+          sh dev/start.sh
+          php sources/bin/migrate.php
+          php sources/bin/import_sensors.php
+          php sources/bin/fetch_catchments.php
+          php sources/bin/collect_bcc.php
+          php sources/bin/collect_bom.php refresh
+          php sources/bin/collect_qld.php
+          php sources/bin/collect_warnings.php
+          php sources/bin/collect_traffic.php
+          php sources/bin/collect_dams.php
+          php sources/bin/fetch_overlays.php
+          php sources/bin/build_json.php
+          php dev/check_outputs.php

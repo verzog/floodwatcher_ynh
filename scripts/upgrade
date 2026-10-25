@@ -18,9 +18,12 @@ _fw_default_settings
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
-# Replace the code completely. Nothing to keep: config.php is rewritten below, and everything
-# the app writes lives in the data folder.
-ynh_setup_source --dest_dir="$install_dir" --full_replace
+# Replace the code from the package's own "sources/" folder (one repo, no separate upstream).
+# Nothing in install_dir is kept: config.php is rewritten below, and everything the app writes
+# lives in the data folder. Clear the old code first (so a file removed between versions doesn't
+# linger), then copy the current code in.
+find "${install_dir:?}/" -mindepth 1 -delete
+cp -r ../sources/. "$install_dir/"
 
 _fw_write_config
 _fw_set_permissions

@@ -18,7 +18,9 @@ _fw_default_settings
 #=================================================
 ynh_script_progression "Setting up source files..."
 
-ynh_setup_source --dest_dir="$install_dir"
+# This package carries the app's code in its own "sources/" folder (one repo, no separate
+# upstream), so copy it in rather than downloading a release tarball.
+cp -r ../sources/. "$install_dir/"
 
 _fw_write_config
 _fw_set_permissions
