@@ -21,6 +21,30 @@
 declare(strict_types=1);
 
 /**
+ * True if a packed shape's bounding box is valid Earth coordinates. Shapes are stored in
+ * 1/100000 degree, so a real box sits within +/-180 degrees of longitude and +/-90 of latitude.
+ * One corrupt shape (a BCC "areas" polygon with a south edge near -2.8e7 degrees, seen 25/10/2026)
+ * would otherwise make the mask grid span millions of degrees and exhaust memory when it is built.
+ *
+ * @param mixed $f A packed shape, expected to be {"b": [w,s,e,n], ...}.
+ * @return bool
+ */
+function sfw_floodmask_valid_shape($f): bool
+{
+    $b = is_array($f) ? ($f['b'] ?? null) : null;
+    if (!is_array($b) || count($b) < 4) {
+        return false;
+    }
+    $w = (int) $b[0];
+    $s = (int) $b[1];
+    $e = (int) $b[2];
+    $n = (int) $b[3];
+    return $w <= $e && $s <= $n
+        && $w >= -18000000 && $e <= 18000000
+        && $s >= -9000000 && $n <= 9000000;
+}
+
+/**
  * Build the mask from packed flood map shapes (lib/arcgis.php format).
  *
  * @param array<int, array<string, mixed>> $features Each {"b": [w,s,e,n], "r": [packed rings]}.
@@ -29,6 +53,9 @@ declare(strict_types=1);
  */
 function sfw_floodmask_build(array $features, float $cell): ?array
 {
+    // Backstop: drop any shape with an out-of-range box before sizing the grid (see
+    // sfw_floodmask_valid_shape). bin/build_floodmask.php filters and logs these per layer too.
+    $features = array_values(array_filter($features, 'sfw_floodmask_valid_shape'));
     if (!$features) {
         return null;
     }

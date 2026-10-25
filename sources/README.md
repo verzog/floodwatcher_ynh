@@ -31,6 +31,10 @@ The rest of this file covers the older manual set-up in My Webapp.
 - **Dams for the Gold Coast (Hinze, Little Nerang) and Logan–Albert (Wyaralong, Maroon,
   Nindooinbah)**, with their state from Seqwater. Their releases don't yet feed the "water coming
   here" score — that waits until these catchments have a river-network definition.
+- **Flood-mask build hardened:** a single flood-map shape with a corrupt bounding box (a BCC
+  "areas" polygon whose south edge read about −28 million degrees) made `build_floodmask` try to
+  allocate a terabyte and crash every `fetch_overlays` run. Shapes whose box isn't valid Earth
+  coordinates are now skipped (and named in the log) instead of blowing up the grid.
 - The Burnett's overlay is still to come (its discover run stalls on the state-station step).
 
 ## Changes in 0.19.14
