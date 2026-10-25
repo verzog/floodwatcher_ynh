@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.14
+# Flood Watcher (SEQ Flood Watch) — version 0.19.15
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,13 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.15
+
+- **Flood-map overlays for the Gold Coast and Logan–Albert** catchments (state FloodCheck
+  broad-scale floodplain), from `discover_catchment.php`. After upgrading, fetch them on the
+  server with `fetch_overlays.php floodplain_goldcoast` and `fetch_overlays.php floodplain_logan`.
+  Dams for these catchments and the Burnett's overlay are still to come.
 
 ## Changes in 0.19.14
 

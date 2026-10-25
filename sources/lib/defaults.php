@@ -181,6 +181,39 @@ return [
                 'catchment' => 'mary',
             ],
             [
+                'key'    => 'floodplain_goldcoast',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Gold Coast's sub-basin in this layer (bin/discover_catchment.php goldcoast,
+                // 25/10/2026). 'Albert River' in the box is the Logan-Albert catchment's.
+                'where'  => "sub_name IN ('Coomera & Nerang Rivers')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'goldcoast',
+            ],
+            [
+                'key'    => 'floodplain_logan',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Logan-Albert's sub-basins in this layer (bin/discover_catchment.php logan,
+                // 25/10/2026). The box also holds Brisbane's (Brisbane/Bremer/Lockyer) and the Gold
+                // Coast's (Coomera & Nerang Rivers), which are left to those catchments.
+                'where'  => "sub_name IN ('Logan River','Albert River')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'logan',
+            ],
+            [
                 'key'    => 'areas',
                 'label'  => 'Areas that can flood (Brisbane)',
                 'hover'  => 'Council flood awareness area',
