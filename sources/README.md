@@ -28,7 +28,10 @@ The rest of this file covers the older manual set-up in My Webapp.
 - **Flood-map overlays for the Gold Coast and Logan–Albert** catchments (state FloodCheck
   broad-scale floodplain), from `discover_catchment.php`. After upgrading, fetch them on the
   server with `fetch_overlays.php floodplain_goldcoast` and `fetch_overlays.php floodplain_logan`.
-  Dams for these catchments and the Burnett's overlay are still to come.
+- **Dams for the Gold Coast (Hinze, Little Nerang) and Logan–Albert (Wyaralong, Maroon,
+  Nindooinbah)**, with their state from Seqwater. Their releases don't yet feed the "water coming
+  here" score — that waits until these catchments have a river-network definition.
+- The Burnett's overlay is still to come (its discover run stalls on the state-station step).
 
 ## Changes in 0.19.14
 
