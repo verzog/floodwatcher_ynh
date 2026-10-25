@@ -6,8 +6,13 @@
  * Find the data sources for a catchment, to help set it up. Changes nothing: it only reads the
  * sources and prints what it finds, ready to copy into the settings and data files.
  *
- * Usage: php bin/discover_catchment.php mary      (a live catchment's key)
- *        php bin/discover_catchment.php b145      (an "under construction" one, by its key)
+ * Usage: php bin/discover_catchment.php mary              (a live catchment's key)
+ *        php bin/discover_catchment.php b145              (an "under construction" one, by its key)
+ *        php bin/discover_catchment.php burnett skip-state (skip the slow state-station step, #2)
+ *
+ * "skip-state" leaves out section 2, which probes the catchment's state stations one by one and is
+ * slow for a big basin (580 stations for the Burnett), so the floodplain and dam sections finish
+ * quickly.
  *
  * Needs the catchment outlines first (bin/fetch_catchments.php). It reports:
  *   1. BoM map pages with river or rain gauges inside the outline, and those gauges;
@@ -33,11 +38,21 @@ require dirname(__DIR__) . '/lib/arcgis.php';
 require dirname(__DIR__) . '/lib/catchments.php';
 
 $config = sfw_config();
-$key = (string) ($argv[1] ?? '');
+// First non-flag argument is the catchment key; "skip-state" (anywhere) skips the slow section 2.
+$skipstate = false;
+$positional = [];
+foreach (array_slice($argv, 1) as $arg) {
+    if ($arg === 'skip-state' || $arg === '--skip-state') {
+        $skipstate = true;
+    } else {
+        $positional[] = $arg;
+    }
+}
+$key = (string) ($positional[0] ?? '');
 $all = sfw_catchments_load();
 if ($key === '' || !isset($all[$key])) {
     fwrite(STDERR, $all
-        ? "Usage: php bin/discover_catchment.php <key>. Keys: " . implode(', ', array_keys($all)) . "\n"
+        ? "Usage: php bin/discover_catchment.php <key> [skip-state]. Keys: " . implode(', ', array_keys($all)) . "\n"
         : "No catchment outlines yet. Run php bin/fetch_catchments.php first.\n");
     exit(1);
 }
@@ -122,58 +137,62 @@ try {
 $say();
 
 // ---------- 2. State stations (WMIP) ----------
-$say('2. State stations with river heights in the last 7 days (lines for data/qld_sites.csv):');
-$qurl = (string) $config['qld']['url'];
-$offset = (int) $config['qld']['tz_offset_hours'] * 3600;
-try {
-    $list = sfw_http_post_json($qurl, ['function' => 'get_site_list', 'version' => '1',
-        'params' => ['site_list' => 'MATCH(' . preg_replace('/[^0-9A-Za-z]/', '', $c['basin']) . '*)']]);
-    if ((int) ($list['error_num'] ?? 0) !== 0) {
-        throw new RuntimeException((string) ($list['error_msg'] ?? 'error ' . $list['error_num']));
-    }
-    $sites = array_values(array_unique(array_filter(array_map(
-        static fn($s): string => strtoupper((string) (is_array($s) ? ($s['site'] ?? '') : $s)),
-        $list['return']['sites'] ?? []
-    ))));
-    $say('   ' . count($sites) . ' stations in basin ' . $c['basin'] . '; checking which report heights…');
-    $found = 0;
-    // One station at a time (the service rejects a whole request if any station in it has no
-    // heights). A station the service times out on is noted and skipped.
-    $failed = [];
-    foreach (array_chunk($sites, 20) as $chunk) {
-        foreach ($chunk as $site) {
-            try {
-                $data = sfw_wmip_traces($qurl,
-                    ['datasource' => 'AT', 'varfrom' => '100.00', 'varto' => '100.00', 'data_type' => 'point'],
-                    $site, time() - 7 * 86400, time(), $offset);
-            } catch (Throwable $e) {
-                $failed[] = $site;
-                if (count($failed) >= 15) {
-                    throw new RuntimeException('too many stations failed (last: ' . $e->getMessage() . ')');
-                }
-                sleep(2);
-                continue;
-            }
-            foreach ((int) ($data['error_num'] ?? 1) === 0 ? $data['return']['traces'] ?? [] : [] as $t) {
-                if ((int) ($t['error_num'] ?? 0) !== 0 || empty($t['trace'])) {
+if ($skipstate) {
+    $say('2. State stations: skipped (pass no skip-state to run this slow step).');
+} else {
+    $say('2. State stations with river heights in the last 7 days (lines for data/qld_sites.csv):');
+    $qurl = (string) $config['qld']['url'];
+    $offset = (int) $config['qld']['tz_offset_hours'] * 3600;
+    try {
+        $list = sfw_http_post_json($qurl, ['function' => 'get_site_list', 'version' => '1',
+            'params' => ['site_list' => 'MATCH(' . preg_replace('/[^0-9A-Za-z]/', '', $c['basin']) . '*)']]);
+        if ((int) ($list['error_num'] ?? 0) !== 0) {
+            throw new RuntimeException((string) ($list['error_msg'] ?? 'error ' . $list['error_num']));
+        }
+        $sites = array_values(array_unique(array_filter(array_map(
+            static fn($s): string => strtoupper((string) (is_array($s) ? ($s['site'] ?? '') : $s)),
+            $list['return']['sites'] ?? []
+        ))));
+        $say('   ' . count($sites) . ' stations in basin ' . $c['basin'] . '; checking which report heights…');
+        $found = 0;
+        // One station at a time (the service rejects a whole request if any station in it has no
+        // heights). A station the service times out on is noted and skipped.
+        $failed = [];
+        foreach (array_chunk($sites, 20) as $chunk) {
+            foreach ($chunk as $site) {
+                try {
+                    $data = sfw_wmip_traces($qurl,
+                        ['datasource' => 'AT', 'varfrom' => '100.00', 'varto' => '100.00', 'data_type' => 'point'],
+                        $site, time() - 7 * 86400, time(), $offset);
+                } catch (Throwable $e) {
+                    $failed[] = $site;
+                    if (count($failed) >= 15) {
+                        throw new RuntimeException('too many stations failed (last: ' . $e->getMessage() . ')');
+                    }
+                    sleep(2);
                     continue;
                 }
-                $d = $t['site_details'] ?? [];
-                $name = str_replace(',', ' ', (string) ($d['name'] ?? $site));
-                $say(sprintf('   %s,%s,%s', $site, $name, $key));
-                $found++;
+                foreach ((int) ($data['error_num'] ?? 1) === 0 ? $data['return']['traces'] ?? [] : [] as $t) {
+                    if ((int) ($t['error_num'] ?? 0) !== 0 || empty($t['trace'])) {
+                        continue;
+                    }
+                    $d = $t['site_details'] ?? [];
+                    $name = str_replace(',', ' ', (string) ($d['name'] ?? $site));
+                    $say(sprintf('   %s,%s,%s', $site, $name, $key));
+                    $found++;
+                }
+                usleep(200000);
             }
-            usleep(200000);
         }
+        if (!$found) {
+            $say('   None found.');
+        }
+        if ($failed) {
+            $say('   The service didn\'t answer for: ' . implode(', ', $failed));
+        }
+    } catch (Throwable $e) {
+        $say('   State service unavailable or didn\'t understand the station search: ' . $e->getMessage());
     }
-    if (!$found) {
-        $say('   None found.');
-    }
-    if ($failed) {
-        $say('   The service didn\'t answer for: ' . implode(', ', $failed));
-    }
-} catch (Throwable $e) {
-    $say('   State service unavailable or didn\'t understand the station search: ' . $e->getMessage());
 }
 $say();
 
