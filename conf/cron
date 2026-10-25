@@ -18,5 +18,9 @@ LOG=/var/log/__APP__/collector.log
 # they've never been downloaded (straight after install).
 17 3 * * 0 __APP__ $PHP $DIR/fetch_overlays.php >> $LOG 2>&1
 23,53 * * * * __APP__ $PHP $DIR/fetch_overlays.php if-missing >> $LOG 2>&1
+# Catchment outlines: weekly (Sunday 3:07 am, before the flood maps), plus an hourly check that only
+# downloads them if they've never been downloaded.
+7 3 * * 0 __APP__ $PHP $DIR/fetch_catchments.php >> $LOG 2>&1
+21 * * * * __APP__ $PHP $DIR/fetch_catchments.php if-missing >> $LOG 2>&1
 # Seqwater dam levels and releases every 30 minutes.
 11,41 * * * * __APP__ $PHP $DIR/collect_dams.php >> $LOG 2>&1

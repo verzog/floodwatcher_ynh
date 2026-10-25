@@ -1,7 +1,7 @@
 # Flood Watcher for YunoHost
 
-[Flood Watcher](https://github.com/verzog/floodwatcher) is a community flood dashboard for the
-Brisbane River catchment in South East Queensland: river levels, rainfall, BoM flood warnings,
+[Flood Watcher](https://github.com/verzog/floodwatcher) is a community flood dashboard for
+Queensland catchments, starting with the Brisbane River and the Mary River: river levels, rainfall, BoM flood warnings,
 gauge alerts, predictive flood alerts, flood maps, road closures and push notifications.
 
 This repository is the YunoHost package. See [doc/DESCRIPTION.md](doc/DESCRIPTION.md) for what it
