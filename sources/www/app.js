@@ -385,14 +385,18 @@
     opts.bands.forEach(function (b) {
       var t0 = frac(b[0]), t1 = frac(Math.min(b[1], opts.max));
       if (t1 - t0 <= 0.001) { return; }
-      svg.appendChild(svgEl('path', { d: arc(rBand, t0, t1), fill: 'none', 'stroke-width': 8,
-        style: 'stroke: var(' + b[2] + ')' }));
+      var band = svgEl('path', { d: arc(rBand, t0, t1), fill: 'none', 'stroke-width': 8 });
+      // Set the colour through the CSSOM rather than a style attribute, so it survives the
+      // enforcing CSP (style-src 'self') while still resolving the band's colour custom property.
+      band.style.stroke = 'var(' + b[2] + ')';
+      svg.appendChild(band);
     });
     // The value: an arc filled from the left, like water rising.
     var tv = frac(opts.value);
     if (tv > 0.004) {
-      svg.appendChild(svgEl('path', { d: arc(rFill, 0, tv), fill: 'none', 'stroke-width': 20,
-        style: 'stroke: ' + opts.fill }));
+      var val = svgEl('path', { d: arc(rFill, 0, tv), fill: 'none', 'stroke-width': 20 });
+      val.style.stroke = opts.fill;  // CSSOM, not a style attribute, so the CSP allows it.
+      svg.appendChild(val);
     }
     (opts.labels || []).forEach(function (l) {
       var t = frac(l[0]);
@@ -2359,8 +2363,12 @@
    * (remembered in this browser), or the one on screen now if it's live.
    */
   function warnCatchment() {
+    // While subscribed, keep the catchment chosen when the box was ticked (saved in this browser),
+    // so the label matches what you actually get. When not subscribed, follow the catchment on
+    // screen, so the label -- and what ticking the box would subscribe to -- is the one you're
+    // looking at, rather than a stale choice from an earlier visit to another catchment.
     var saved = (memGet(NOTIFY_KEY) || {}).warnCatchment;
-    if (saved && catchmentLive(saved)) { return saved; }
+    if (push.sub && saved && catchmentLive(saved)) { return saved; }
     return catchmentLive(state.catchment) ? state.catchment : 'brisbane';
   }
 
@@ -2427,9 +2435,15 @@
       if (!j.publicKey) { throw new Error(j.error || 'Notifications aren\'t available on this site right now.'); }
       return push.reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(j.publicKey) });
     }).then(function (sub) {
+      // Lock in the catchment shown now. While push.sub is still null, warnCatchment() follows the
+      // catchment on screen, so enabling notifications subscribes to what you're looking at rather
+      // than a target saved on an earlier visit to another catchment.
+      var prefs = memGet(NOTIFY_KEY) || {};
+      prefs.warnCatchment = warnCatchment();
+      memSet(NOTIFY_KEY, prefs);
       push.sub = sub;
       return pushSync();
-    }).then(function () { pushShow(); }).catch(function (e) { pushShow(e.message); });
+    }).then(function () { showWarnCatchment(); pushShow(); }).catch(function (e) { pushShow(e.message); });
   });
 
   document.getElementById('notify-off').addEventListener('click', function () {
@@ -2437,7 +2451,7 @@
     var sub = push.sub;
     pushCall({ action: 'unsubscribe', endpoint: sub.endpoint }).catch(function () { /* Unsubscribing below is enough. */ })
       .then(function () { return sub.unsubscribe(); })
-      .then(function () { push.sub = null; pushShow(); });
+      .then(function () { push.sub = null; showWarnCatchment(); pushShow(); });
   });
 
   document.getElementById('notify-test').addEventListener('click', function () {
