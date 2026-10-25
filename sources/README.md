@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.12
+# Flood Watcher (SEQ Flood Watch) — version 0.19.13
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,15 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.13
+
+- **Nine more catchments go live**, across the two Bureau of Meteorology map regions the collector
+  already reads: in the south-east, the Logan and Albert, Gold Coast, Pine and Caboolture,
+  Maroochy and Mooloolah, and Noosa rivers; in the Wide Bay and Burnett, the Burrum, Burnett,
+  Kolan and Baffle. Each picks up the BoM river and rain gauges inside its outline, its flood
+  warnings and its road closures. Flood-map overlays and dams for these catchments come later.
+  A catchment that turns out to have no gauges inside it is dropped back to "under construction".
 
 ## Changes in 0.19.12
 

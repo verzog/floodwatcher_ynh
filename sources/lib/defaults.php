@@ -72,6 +72,38 @@ return [
                 'Kandanga', 'Amamoor', 'Tinana Creek', 'Wide Bay Creek', 'Glastonbury Creek', 'Munna Creek',
                 'Borumba', 'Baroon Pocket', 'Kenilworth', 'Conondale',
             ],
+            'logan' => [
+                'Logan River', 'Albert River', 'Beaudesert', 'Logan Village', 'Waterford', 'Maclean Bridge',
+                'Canungra Creek', 'Teviot Brook', 'Cedar Grove', 'Wyaralong', 'Round Mountain',
+            ],
+            'southcoast' => [
+                'Nerang River', 'Coomera River', 'Tallebudgera Creek', 'Currumbin Creek', 'Pimpama River',
+                'Mudgeeraba Creek', 'Hinze Dam', 'Gold Coast', 'Nerang', 'Oxenford',
+            ],
+            'pine' => [
+                'Pine River', 'North Pine River', 'South Pine River', 'Caboolture River', 'Caboolture', 'Petrie',
+                'Lake Samsonvale', 'Sideling Creek', 'Burpengary Creek', 'Narangba', 'Dayboro',
+            ],
+            'maroochy' => [
+                'Maroochy River', 'Maroochydore', 'Nambour', 'Petrie Creek', 'Eudlo Creek', 'Mooloolah River',
+                'Mooloolaba', 'Buderim', 'Paynter Creek',
+            ],
+            'noosa' => [
+                'Noosa River', 'Tewantin', 'Kin Kin', 'Cooroy', 'Cooroibah', 'Lake Macdonald', 'Pomona',
+            ],
+            'burrum' => [
+                'Burrum River', 'Isis River', 'Cherwell River', 'Howard', 'Childers', 'Burrum Heads',
+            ],
+            'burnett' => [
+                'Burnett River', 'Bundaberg', 'Gayndah', 'Mundubbera', 'Eidsvold', 'Paradise Dam',
+                'Ben Anderson Barrage', 'Walla', 'Monto', 'Three Moon Creek',
+            ],
+            'kolan' => [
+                'Kolan River', 'Gin Gin', 'Fred Haigh Dam', 'Bucca', 'Monduran',
+            ],
+            'baffle' => [
+                'Baffle Creek', 'Rosedale', 'Miriam Vale', 'Littabella',
+            ],
         ],
     ],
 
@@ -85,8 +117,17 @@ return [
         'outline_offset' => 0.0003, // Simplification of the live catchments' outlines (about 30 m).
         'list_offset'    => 0.003,  // And of the others (about 300 m), to keep the page quick.
         'live'           => [
-            'brisbane' => ['name' => 'Brisbane River', 'basin' => '143'],
-            'mary'     => ['name' => 'Mary River', 'basin' => '138'],
+            'brisbane'   => ['name' => 'Brisbane River', 'basin' => '143'],
+            'logan'      => ['name' => 'Logan and Albert Rivers', 'basin' => '145'],
+            'southcoast' => ['name' => 'Gold Coast rivers', 'basin' => '146'],
+            'pine'       => ['name' => 'Pine and Caboolture Rivers', 'basin' => '142'],
+            'maroochy'   => ['name' => 'Maroochy and Mooloolah Rivers', 'basin' => '141'],
+            'noosa'      => ['name' => 'Noosa River', 'basin' => '140'],
+            'mary'       => ['name' => 'Mary River', 'basin' => '138'],
+            'burrum'     => ['name' => 'Burrum and Isis Rivers', 'basin' => '137'],
+            'burnett'    => ['name' => 'Burnett River', 'basin' => '136'],
+            'kolan'      => ['name' => 'Kolan River', 'basin' => '135'],
+            'baffle'     => ['name' => 'Baffle Creek', 'basin' => '134'],
         ],
     ],
 
@@ -202,8 +243,17 @@ return [
         // Councils in each live catchment (matched against the event's council name). An event in
         // another live catchment is kept only if it's inside that catchment's outline.
         'councils'     => [
-            'brisbane' => ['Brisbane City', 'Ipswich City', 'Lockyer Valley', 'Somerset', 'Toowoomba', 'Scenic Rim'],
-            'mary'     => ['Gympie', 'Sunshine Coast', 'Noosa', 'Fraser Coast', 'South Burnett'],
+            'brisbane'   => ['Brisbane City', 'Ipswich City', 'Lockyer Valley', 'Somerset', 'Toowoomba', 'Scenic Rim'],
+            'logan'      => ['Logan City', 'Scenic Rim', 'Gold Coast', 'Ipswich City'],
+            'southcoast' => ['Gold Coast'],
+            'pine'       => ['Moreton Bay'],
+            'maroochy'   => ['Sunshine Coast'],
+            'noosa'      => ['Noosa', 'Sunshine Coast'],
+            'mary'       => ['Gympie', 'Sunshine Coast', 'Noosa', 'Fraser Coast', 'South Burnett'],
+            'burrum'     => ['Fraser Coast', 'Bundaberg'],
+            'burnett'    => ['Bundaberg', 'North Burnett', 'South Burnett', 'Gladstone'],
+            'kolan'      => ['Bundaberg'],
+            'baffle'     => ['Gladstone', 'Bundaberg'],
         ],
         'types_all'    => ['Flooding'],          // Always shown.
         'types_closed' => ['Hazard', 'Crash'],   // Shown only when the road is closed.
