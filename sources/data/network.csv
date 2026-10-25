@@ -227,3 +227,128 @@ B540714-H,B540797-H,,Cannon Creek at Kooralbyn; check: joins the Logan River nea
 B540712-H,B540475-H,dam,Burnett Creek inflow into Maroon Dam
 B540475-H,B540591-H,,Maroon Dam to tailwater
 B540591-H,B040946-H,,Burnett Creek; check: joins the Logan River near Rathdowney
+# ======== Balonne–Condamine catchment ========
+# DRAFT, ordered from BoM gauge positions (bin/discover_catchment.php condamine, 25/10/2026). This
+# is a big inland catchment and few joins are confirmed, so almost every line is marked "check" —
+# please correct them (a local eye on the Darling Downs would help most). The main stem
+# (Warwick → Dalby → Chinchilla → Condamine → Surat → St George) is the confident part; the
+# headwater order above Warwick and the tributary join points are guesses. Weirs (Chinchilla,
+# Jack Taylor, Talgai, Loudoun) pass flood flows, so they are ordinary nodes, not dams; only the
+# storages Beardmore and Leslie carry the "dam" flag. Small Toowoomba city creeks (East, West and
+# Gowrie creeks) and the lower-Balonne branch points (ungauged, below St George) are left out.
+# ---- Condamine River (main stem) ----
+B541144-H,B541039-H,,The Head to Brosnans Barn; check: headwater order uncertain
+B541039-H,B041537-H,,Brosnans Barn to Killarney; check: headwater
+B041535-H,B041536-H,,Elbow Valley; check: upper Condamine, joins near Warwick
+B041537-H,B041536-H,,Killarney to Murrays Bridge; check
+B041536-H,B541137-H,,Murrays Bridge to Harrisons Road; check
+B541137-H,B041534-H,,Harrisons Road to Warwick; check
+B041534-H,B041503-H,,Warwick to Scots College
+B041503-H,B041473-H,,Scots College to Pratten; check
+B041473-H,B541038-H,,Pratten to Talgai Weir; check
+B541038-H,B541050-H,,Talgai Weir to Millbrook; check
+B541050-H,B041499-H,,Millbrook to Tummaville; check
+B041499-H,B541040-H,,Tummaville to Yarramalong; check
+B541040-H,B041472-H,,Yarramalong to Centenary Bridge; check
+B041472-H,B541096-H,,Centenary Bridge to Lemon Tree Weir; check
+B541096-H,B541056-H,,Lemon Tree Weir to Lone Pine; check
+B541056-H,B041498-H,,Lone Pine to Cecil Plains; check
+B041498-H,B041339-H,,Cecil Plains to Loudoun; check
+B041339-H|B541054-H,B541197-H,,Loudoun Bridge & Weir to Ranges Bridge; check
+B541197-H,B541156-H,,Ranges Bridge to Brigalow Bridge; check
+B541156-H,B041517-H,,Brigalow Bridge to Chinchilla Weir; check
+B041517-H,B542008-H,,Chinchilla Weir to Bedarra; check
+B542008-H,B542019-H,,Bedarra to Condamine; check
+B542019-H,B042098-H,,Condamine to Cotswold; check
+B042098-H,B043052-H,,Cotswold; the Condamine becomes the Balonne above Warkon; check
+# ---- Balonne River (continues from the Condamine, down to St George) ----
+B043052-H,B543005-H,,Warkon to Surat; check
+B543005-H,B043101-H,,Surat to Weribone; check
+B043101-H,B043107-H,,Weribone to Warroo; check
+B043107-H,B043103-H,dam,Warroo into Beardmore Dam; check
+B043103-H,B543004-H,,Beardmore Dam to Jack Taylor Weir
+B543004-H,B043104-H,,Jack Taylor Weir to St George
+B043104-H,B044117-H,,St George to Balonne Minor at Dirranbandi; check
+B044117-H,,,Balonne Minor at Dirranbandi; continues into NSW (the Barwon–Darling)
+# ---- Lower Balonne distributaries (branch off below St George; each runs on into NSW) ----
+B544018-H,B544023-H,,Culgoa River, Whyenbah to Woolerbilla; check: a lower-Balonne distributary
+B544023-H,,,Culgoa River at Woolerbilla; continues into NSW
+B544012-H,,,Narran River at Dirranbandi-Hebel Road; lower-Balonne distributary into NSW; check
+B544016-H,,,Bokhara River at Hebel; lower-Balonne distributary into NSW; check
+B544013-H,,,Ballandool River at Hebel-Bollon Road; lower-Balonne distributary into NSW; check
+B044197-H,,,Briarie Creek at Hebel-Woolerbilla Rd; lower-Balonne distributary into NSW; check
+B544022-H,B044010-H,,Wallam Creek, Cardiff to Bollon; check: joins the Culgoa/lower Balonne
+B044010-H,B544018-H,,Wallam Creek at Bollon; check: joins the Culgoa
+B544025-H,B544023-H,,Nebine Creek; check: joins the Culgoa in the far west
+# ---- Maranoa River (flows south into Beardmore Dam) ----
+B543007-H,B543011-H,,Forest Vale to Homebush; check
+B543011-H,B043102-H,,Homebush to Mitchell; check
+B043102-H,B044075-H,,Mitchell to Woodlands; check
+B044075-H,B543024-H,,Woodlands to Begonia; check
+B543024-H,B043100-H,,Begonia to Old Cashmere; check
+B043100-H,B043103-H,dam,Old Cashmere; the Maranoa flows into Beardmore Dam; check
+B044056-H,B044075-H,,Mungallala Creek; check: joins the Maranoa
+# ---- Bungil Creek and Mooga/Muckadilla creeks (Roma; join the Balonne near Surat) ----
+B043105-H,B043033-H,,Bungil Creek, Tabers to Tindarra; check
+B043033-H,B543025-H,,Tindarra to Knayers Lane; check
+B543025-H,B543010-H,,Knayers Lane to Roma; check
+B543010-H,B043077-H,,Roma to Garrabarra; check
+B043077-H,B043101-H,,Bungil Creek at Garrabarra; check: joins the Balonne near Weribone
+B543026-H,B543010-H,,Mooga Creek; check: joins Bungil Creek near Roma
+B043080-H,B043077-H,,Muckadilla Creek; check: joins Bungil Creek
+B543008-H,B043052-H,,Yuleba Creek; check: joins the Balonne near Warkon
+# ---- Dogwood Creek (Miles; joins the Condamine near Condamine town) ----
+B542016-H,B042049-H,,Dogwood Creek, Myall Park Rd to Miles; check
+B042049-H,B042107-H,,Miles to Gilweir; check
+B042107-H,B042113-H,,Gilweir to Pine Hill Crossing; check
+B042113-H,B542019-H,,Dogwood Creek at Pine Hill Crossing; check: joins the Condamine near Condamine
+B541205-H,B542019-H,,Undulla Creek at Tara Lagoon; check: joins the Condamine near Condamine
+# ---- Charleys Creek (joins the Condamine at Chinchilla) ----
+B541126-H,B541124-H,,Charleys Creek, Beruna to Burncluith Bridge; check
+B541124-H,B541125-H,,Burncluith Bridge to Seven Oaks; check
+B541125-H,B541074-H,,Seven Oaks to Chinchilla; check
+B542036-H,B541074-H,,Greenswamp Rd; check: joins Charleys Creek at Chinchilla
+B541074-H,B041517-H,,Charleys Creek at Chinchilla; check: joins the Condamine at Chinchilla Weir
+# ---- Cooranga, Jandowae and Jimbour creeks (join the Condamine near Brigalow) ----
+B541122-H,B541154-H,,Cooranga Creek, Jandowae-Macalister Rd to Warra; check
+B541154-H,B541156-H,,Cooranga Creek at Warra; check: joins the Condamine near Brigalow
+B541204-H,B541118-H,,Jandowae Creek, Niagara Rd to Jandowae; check
+B541117-H,B541118-H,,Jandowae Creek at Sengs Road to Jandowae; check
+B541118-H,B541156-H,,Jandowae Creek; check: joins the Condamine near Brigalow
+B541203-H,B541197-H,,Jimbour Creek; check: joins the Condamine near Macalister
+# ---- Myall Creek (Dalby; joins the Condamine near Loudoun) ----
+B541167-H,B541042-H,,Myall Creek, Quinalow to Moffatt; check
+B541042-H,B541043-H,,Moffatt to Clydesdale; check
+B541043-H,B541196-H,,Clydesdale to Blaxland; check
+B541196-H,B541041-H,,Blaxland to Dalby; check
+B541041-H,B041339-H,,Myall Creek at Dalby; check: joins the Condamine near Loudoun
+# ---- Oakey Creek (joins the Condamine near Cecil Plains) ----
+B541141-H,B541146-H,,Doctors Creek at Oakey (Oakey-Cooyar Rd); check: joins Oakey Creek
+B541145-H,B541141-H,,Doctors Creek at Oakey (Pechey-Maclagan Rd); check
+B541148-H,B541147-H,,Oakey Creek, Boodua to Kingsthorpe; check
+B541147-H,B541146-H,,Kingsthorpe to Weir Park; check
+B541146-H,B541160-H,,Weir Park to Dalmeny; check
+B541160-H,B541097-H,,Dalmeny to Jondaryan; check
+B541097-H,B541159-H,,Jondaryan to Bowenville Reserve; check
+B541159-H,B041479-H,,Bowenville Reserve to Fairview; check
+B041479-H,B041498-H,,Oakey Creek at Fairview; check: joins the Condamine near Cecil Plains
+# ---- Dalrymple Creek (Allora; joins the Condamine near Millbrook) ----
+B541101-H,B041516-H,,Dalrymple Creek, Goomburra to Allora; check
+B041516-H,B541048-H,,Allora to Victoria Hill; check
+B541048-H,B541050-H,,Dalrymple Creek at Victoria Hill; check: joins the Condamine near Millbrook
+# ---- Kings, Hodgson and Canal creeks (upper Condamine, join near Tummaville) ----
+B041518-H,B041499-H,,Kings Creek at Aides Bridge; check: joins the Condamine near Tummaville
+B541170-H,B041515-H,,Hodgson Creek, Cambooya to Felton; check
+B041515-H,B041499-H,,Hodgson Creek at Felton; check: joins the Condamine near Tummaville
+B541142-H,B041514-H,,Canal Creek, Karara to Leyburn; check
+B041514-H,B541104-H,,Leyburn to Torridon; check
+B541104-H,B041499-H,,Canal Creek at Torridon; check: joins the Condamine near Tummaville
+# ---- Swan, Emu and Glengallan creeks, and Leslie Dam (join the Condamine near Warwick) ----
+B541036-H,B041530-H,,Swan Creek, Swanfels to Yangan; check
+B041530-H,B041534-H,,Swan Creek at Yangan; check: joins the Condamine near Warwick
+B041533-H,B041534-H,,Emu Creek at Emu Vale; check: joins the Condamine near Warwick
+B041531-H,B541098-H,,Glengallan Creek to Rocky Ridge; check
+B541098-H,B041534-H,,Glengallan Creek at Rocky Ridge; check: joins the Condamine near Warwick
+B041532-H,B541055-H,dam,Connolly Dam into Leslie Dam (Sandy Creek); check
+B541055-H,B541037-H,,Leslie Dam to its tailwater
+B541037-H,B041534-H,,Sandy Creek below Leslie Dam; check: joins the Condamine near Warwick
