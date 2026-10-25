@@ -145,3 +145,85 @@ B540678-H,B040896-H,,Magnolia to Teddington Weir
 B040896-H,B540677-H,,Teddington Weir to Bidwell
 B540677-H,B540027-H,,Bidwell to Tinana Barrage
 B540027-H,B040443-H,,Tinana Creek; check: joins the Mary River just above Maryborough (Portside)
+#
+# ======== Gold Coast catchment ========
+# Ordered by gauge position (BoM, 25/10/2026). The Nerang, Coomera, Tallebudgera, Currumbin and
+# Pimpama reach the Broadwater separately. Short tidal and lake gauges that drain straight to the
+# sea are left out (Air Sea Rescue aside, as the Nerang's mouth): Lake Orr, Miami Lake, Coombabah,
+# Biggera, Loder, Saltwater, Oyster, Hotham, Worongary, Bonogin, Back Creek. Every "check" needs
+# confirming by someone who knows the rivers.
+# ---- Nerang River ----
+B540438-H,B540610-H,dam,Numinbah Valley into Hinze Dam (Advancetown Lake)
+B540610-H,B040846-H,,Hinze Dam to Clearview
+B040846-H,B540319-H,,Clearview to Carrara
+B540319-H,B540318-H,,Carrara to Evandale
+B540318-H,B040881-H,,Evandale to Air Sea Rescue (tidal)
+# ---- Little Nerang Creek ----
+B540054-H,B040846-H,,Little Nerang Dam; check: Little Nerang Creek joins the Nerang below Hinze near Gilston
+# ---- Mudgeeraba Creek ----
+B540440-H,B540399-H,,Neranwood to Springbrook Road; check
+B540399-H,B540254-H,,Springbrook Road to Mudgeeraba; check
+B540254-H,B540253-H,,Mudgeeraba to Boobegan Creek Lock; check
+B540253-H,B540319-H,,Mudgeeraba Creek; check: joins the Nerang River near Carrara
+# ---- Coomera River ----
+B540290-H,B540291-H,,Canungra Army to Clagiraba Road
+B540291-H,B540292-H,,Clagiraba Road to Oxenford Weir
+B540292-H,B540293-H,,Oxenford Weir to Coomera Shores
+# ---- Tallebudgera Creek ----
+B540366-H,B540356-H,,Tallebudgera Creek Dam to Tallebudgera Creek Road
+B540356-H,B540320-H,,Tallebudgera Creek Road to Coplicks Bridge
+B540320-H,B540839-H,,Coplicks Bridge to Tallebudgera
+B540839-H,B540577-H,,Tallebudgera to Tallebudgera Creek Mouth
+# ---- Currumbin Creek ----
+B540640-H,B540070-H,,Currumbin Valley to Nicolls Bridge
+# ---- Pimpama River ----
+B540377-H,B540408-H,,Stewarts Rd to Norwell; check: order of Norwell and Kerkin Road
+B540408-H,B540294-H,,Norwell to Kerkin Road; check
+#
+# ======== Logan-Albert catchment ========
+# Ordered by gauge position (BoM, 25/10/2026). The Logan's middle order (the Bromelton and Cedar
+# Grove weirs, Yarrahappini) and the tributary joins need a local eye -- most are marked "check".
+# Small urban creeks near Logan City (Scrubby, Slacks, Schmidts, Windaroo, Quinzeh) and dams/creeks
+# that belong to other catchments (Tingalpa at Leslie Harrison, Wynnum Creek) are left out.
+# ---- Logan River ----
+B040946-H,B540797-H,,Rathdowney to Innisplain; check
+B540797-H,B040945-H,,Innisplain to Round Mountain; check
+B040945-H,B540270-H,,Round Mountain to Bromelton Weir; check
+B540270-H,B540271-H,,Bromelton Weir (headwater to tailwater)
+B540271-H,B040939-H,,Bromelton Weir to Beaudesert; check
+B040939-H,B540590-H,,Beaudesert to Cedar Grove Weir; check
+B540590-H,B540748-H,,Cedar Grove Weir (headwater to tailwater)
+B540748-H,B040940-H,,Cedar Grove Weir to Yarrahappini; check
+B040940-H,B540214-H,,Yarrahappini to South Maclean; check
+B540214-H,B540515-H,,South Maclean (headwater to tailwater)
+B540515-H,B040935-H,,South Maclean to Maclean Bridge; check
+B040935-H,B540596-H,,Maclean Bridge to Logan Village; check
+B540596-H,B040878-H,,Logan Village to Waterford; check
+B040878-H,B540645-H,,Waterford to Parklands; check
+# ---- Albert River (joins the Logan near Eagleby) ----
+B540796-H,B040936-H,,Darlington School to Lumeah; check
+B040936-H,B040938-H,,Lumeah to Bromfleet; check
+B040938-H,B540691-H,,Bromfleet to Tamborine; check
+B540691-H,B040761-H,,Tamborine to Wolffdene; check
+B040761-H,B540644-H,,Wolffdene to Beenleigh; check
+B540644-H,B540645-H,,Albert River at Beenleigh; check: joins the Logan River near Eagleby
+# ---- Teviot Brook (Wyaralong Dam; joins the Logan near Cedar Grove) ----
+B040947-H,B540713-H,,Croftby to Harpers Crossing; check
+B540713-H,B040949-H,,Harpers Crossing to Boonah; check
+B040949-H,B540510-H,,Boonah to Coulson Crossing; check
+B540510-H,B540509-H,,Coulson Crossing to Coulson
+B540509-H,B540512-H,dam,Coulson into Wyaralong Dam; check
+B540512-H,B540690-H,,Wyaralong Dam to Kilmoylar Rd
+B540690-H,B540748-H,,Teviot Brook; check: joins the Logan River near Cedar Grove
+# ---- Canungra Creek (joins the Albert River near Tamborine) ----
+B540715-H,B040937-H,,Double Crossing Rd to Benobble; check
+B040937-H,B540691-H,,Canungra Creek; check: joins the Albert River near Tamborine
+# ---- Christmas Creek (joins the upper Logan near Innisplain) ----
+B040944-H,B540402-H,,Rudds Lane to Tramway Lane; check
+B540402-H,B540797-H,,Christmas Creek; check: joins the Logan River near Innisplain
+# ---- Running Creek, Cannon Creek and Burnett Creek (upper Logan) ----
+B040943-H,B040946-H,,Running Creek; check: joins the Logan River near Rathdowney
+B540714-H,B540797-H,,Cannon Creek at Kooralbyn; check: joins the Logan River near Innisplain
+B540712-H,B540475-H,dam,Burnett Creek inflow into Maroon Dam
+B540475-H,B540591-H,,Maroon Dam to tailwater
+B540591-H,B040946-H,,Burnett Creek; check: joins the Logan River near Rathdowney
