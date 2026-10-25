@@ -1,7 +1,9 @@
 # Keeps this package pointing at the latest Flood Watcher release.
 #
-# Every night (and whenever "Run workflow" is pressed on the Actions tab) it checks
-# verzog/floodwatcher for a newer published release. If there is one, it runs tools/bump.sh,
+# Every 15 minutes (and whenever "Run workflow" is pressed on the Actions tab) it checks
+# verzog/floodwatcher for a newer published release, so a new release reaches this package within
+# about a quarter of an hour (GitHub can run scheduled checks a little late). Both repositories
+# are public, so these checks cost no Actions minutes. If there is one, it runs tools/bump.sh,
 # which sets the version, download address and checksum in manifest.toml, and commits that.
 # It never touches a server: installed apps change only when someone runs
 # `yunohost app upgrade`.
@@ -9,7 +11,7 @@ name: Update to the latest release
 
 on:
   schedule:
-    - cron: '17 15 * * *'   # 01:17 Brisbane time.
+    - cron: '7-59/15 * * * *'   # Every 15 minutes, at 7, 22, 37 and 52 past the hour.
   workflow_dispatch:
 
 permissions:
