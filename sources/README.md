@@ -25,12 +25,14 @@ The rest of this file covers the older manual set-up in My Webapp.
 
 ## Changes in 0.19.14
 
-- The **Content-Security-Policy is now enforcing** (it was report-only in 0.19.12). The live
-  browser console was confirmed clean, so the policy now blocks anything off its allow-list instead
-  of only logging it.
-- The **"All BoM flood warnings for the … catchment"** label now names the catchment you're looking
-  at while you're not subscribed, instead of a catchment remembered from an earlier visit. Once you
-  are subscribed, it keeps showing the catchment your subscription is actually for.
+- The **Content-Security-Policy is now enforcing** (it was report-only in 0.19.12). The policy now
+  blocks anything off its allow-list instead of only logging it. The gauge dial's colours are now
+  set through the CSSOM rather than inline style attributes, so they still render under the stricter
+  policy.
+- The **"All BoM flood warnings for the … catchment"** choice now follows the catchment you're
+  looking at while you're not subscribed — the label names it, and turning notifications on
+  subscribes to it — instead of a catchment remembered from an earlier visit. Once you are
+  subscribed, it keeps showing the catchment your subscription is actually for.
 
 ## Changes in 0.19.13
 
