@@ -83,6 +83,7 @@ try {
     $say('   Checking ' . count($pages) . ' BoM pages (IDQ653xx and IDQ654xx)…');
     $riverpages = [];
     $rainpages = [];
+    $rainperiods = []; // page => 'past hour' | 'since 9am' | '24 hours'.
     foreach ($pages as $page) {
         try {
             $html = sfw_fetch_raw($base . $page);
@@ -102,8 +103,28 @@ try {
             }
         } elseif ($rn) {
             $rainpages[] = $page;
+            // Which of the three a rain page is, from the period each gauge's figure covers (the
+            // 6th popup argument): all 24 = 24 hours (not used), mixed small numbers = since 9am
+            // (rain_9am_maps), all 1 = past hour (rain_maps). The catch: a since-9am page read
+            // within an hour of 9am also shows ~1 hour, so elapsed hours alone can't tell the two
+            // apart just after the 9am (Brisbane) reset. Only in that window do we flag it as
+            // ambiguous rather than guess; at any other time an all-1-hour page is genuinely
+            // past-hour (a since-9am page would show more hours by then).
+            $hrs = array_map(static fn(array $g): int => (int) $g['hours'], $rn);
+            $bnehour = (int) gmdate('G', time() + (int) $config['qld']['tz_offset_hours'] * 3600);
+            $nearreset = $bnehour >= 9 && $bnehour < 11;
+            if (min($hrs) >= 24) {
+                $period = '24 hours';
+            } elseif (max($hrs) > 1) {
+                $period = 'since 9am';
+            } elseif ($nearreset) {
+                $period = 'past hour or since 9am (ambiguous near 9am — re-run after ~11am Brisbane)';
+            } else {
+                $period = 'past hour';
+            }
+            $rainperiods[$page] = $period;
             $title = preg_match('#<title>\s*([^<]{1,120})#i', $html, $tm) ? ' "' . trim($tm[1]) . '"' : '';
-            $say(sprintf('   %s%s: %d rain gauges inside', $page, $title, count($rn)));
+            $say(sprintf('   %s%s: %d rain gauges inside (period: %s)', $page, $title, count($rn), $period));
             foreach ($rn as $g) {
                 $rain[$g['id']] ??= $g + ['page' => $page];
             }
@@ -128,8 +149,24 @@ try {
     $say("     'river_maps' => ['" . implode("', '", array_values(array_unique(array_merge(
         (array) $config['bom']['river_maps'], $riverpages)))) . "'],");
     if ($rainpages) {
-        $say("     'rain_maps'  => ['" . implode("', '", array_values(array_unique(array_merge(
-            (array) $config['bom']['rain_maps'], $rainpages)))) . "'],  (check which are past-hour and since-9am pages)");
+        // rain_maps = past-hour pages; rain_9am_maps = since-9am pages. 24-hour pages aren't used
+        // (the dashboard totals its own 24 hours from the stored hourly readings).
+        $past = array_keys(array_filter($rainperiods, static fn(string $p): bool => $p === 'past hour'));
+        $nine = array_keys(array_filter($rainperiods, static fn(string $p): bool => $p === 'since 9am'));
+        $day = array_keys(array_filter($rainperiods, static fn(string $p): bool => $p === '24 hours'));
+        $say("     'rain_maps'     => ['" . implode("', '", array_values(array_unique(array_merge(
+            (array) $config['bom']['rain_maps'], $past)))) . "'],  // past hour");
+        $say("     'rain_9am_maps' => ['" . implode("', '", array_values(array_unique(array_merge(
+            (array) $config['bom']['rain_9am_maps'], $nine)))) . "'],  // since 9am");
+        if ($day) {
+            $say('   (24-hour pages, not added: ' . implode(', ', $day) . ')');
+        }
+        $amb = array_keys(array_filter($rainperiods, static fn(string $p): bool =>
+            $p !== 'past hour' && $p !== 'since 9am' && $p !== '24 hours'));
+        if ($amb) {
+            $say('   (left out, period unclear near the 9am reset — re-run after ~11am Brisbane: '
+                . implode(', ', $amb) . ')');
+        }
     }
 } catch (Throwable $e) {
     $say('   BoM unavailable: ' . $e->getMessage());
