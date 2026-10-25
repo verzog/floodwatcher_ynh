@@ -81,7 +81,7 @@ return [
                 'Mudgeeraba Creek', 'Hinze Dam', 'Gold Coast', 'Nerang', 'Oxenford',
             ],
             'pine' => [
-                'Pine River', 'North Pine River', 'South Pine River', 'Caboolture River', 'Caboolture', 'Petrie',
+                'Pine River', 'North Pine River', 'South Pine River', 'Caboolture River', 'Caboolture',
                 'Lake Samsonvale', 'Sideling Creek', 'Burpengary Creek', 'Narangba', 'Dayboro',
             ],
             'maroochy' => [
