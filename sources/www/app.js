@@ -110,7 +110,10 @@
 
   /** The catchments shown on the map: the chosen one, and the compare one if set (one or two keys). */
   function activeCatchments() {
-    return state.compare && state.compare !== state.catchment && catchmentInfo(state.compare)
+    // Honour the compare catchment once it's a known catchment -- or before the list has loaded, so
+    // a shareable ?c=…&with=… link keeps both while the hash gauge is opened (it's cleared later if
+    // it turns out to be unknown).
+    return state.compare && state.compare !== state.catchment && (!state.catchments.length || catchmentInfo(state.compare))
       ? [state.catchment, state.compare] : [state.catchment];
   }
 
@@ -1654,9 +1657,21 @@
     list.textContent = '';
     status.hidden = false;
     status.textContent = 'Searching…';
-    // Search the catchment on screen and a little around it (south-east Queensland until it's known).
-    var c = catchmentInfo(state.catchment);
-    var b = c && c.bbox ? [c.bbox[1] - 0.3, c.bbox[2] + 0.3, c.bbox[3] + 0.3, c.bbox[0] - 0.3] : [151.2, -26.4, 153.6, -28.6];
+    // Search the catchments on screen and a little around them (both, when comparing; south-east
+    // Queensland until a box is known). bbox is [south, west, north, east]; the viewbox Nominatim
+    // wants is west, north, east, south.
+    var boxes = activeCatchments().map(catchmentInfo).filter(function (x) { return x && x.bbox; });
+    var b;
+    if (boxes.length) {
+      var s = Infinity, w = Infinity, n = -Infinity, e = -Infinity;
+      boxes.forEach(function (x) {
+        s = Math.min(s, x.bbox[0]); w = Math.min(w, x.bbox[1]);
+        n = Math.max(n, x.bbox[2]); e = Math.max(e, x.bbox[3]);
+      });
+      b = [w - 0.3, n + 0.3, e + 0.3, s - 0.3];
+    } else {
+      b = [151.2, -26.4, 153.6, -28.6];
+    }
     var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=au' +
       '&accept-language=en-AU&bounded=1&viewbox=' + b.map(function (v) { return v.toFixed(2); }).join(',') +
       '&q=' + encodeURIComponent(q);
@@ -2942,6 +2957,12 @@
     return typeof saved === 'string' && /^[a-z0-9_]{1,32}$/.test(saved) ? saved : 'brisbane';
   }
 
+  /** The second (compare) catchment to start with: the address (&with=), then this browser's last choice. */
+  function startingCompare() {
+    var withKey = new URLSearchParams(location.search).get('with') || memGet(COMPARE_KEY);
+    return typeof withKey === 'string' && /^[a-z0-9_]{1,32}$/.test(withKey) ? withKey : null;
+  }
+
   /** Load the list of catchments (all of Queensland), falling back to the live ones in the gauge data. */
   function loadCatchments() {
     return fetch('data/catchments.json?t=' + Date.now())
@@ -2961,9 +2982,7 @@
         }
         var wanted = state.catchment;
         fillCatchmentSelect();
-        var withKey = new URLSearchParams(location.search).get('with') || memGet(COMPARE_KEY);
-        state.compare = (typeof withKey === 'string' && /^[a-z0-9_]{1,32}$/.test(withKey) && catchmentInfo(withKey))
-          ? withKey : null;
+        if (state.compare && !catchmentInfo(state.compare)) { state.compare = null; memSet(COMPARE_KEY, null); }
         setCatchment(catchmentInfo(wanted) ? wanted : (catchmentInfo('brisbane') || state.catchments[0]).key,
           { keepView: !!location.hash, initial: true });
       });
@@ -3124,6 +3143,7 @@
 
   // Start with the catchment from the address or this browser, before the data arrives.
   state.catchment = startingCatchment();
+  state.compare = startingCompare();
   state.alertScope = memGet('floodwatcher.alertScope') === 'all' ? 'all' : 'here';
   showCatchmentChrome();
   load().then(loadCatchments);
