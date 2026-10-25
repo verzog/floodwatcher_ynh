@@ -37,7 +37,18 @@ foreach ($config['overlays']['layers'] as $layer) {
     if (!is_array($data) || empty($data['f'])) {
         continue;
     }
-    array_push($features, ...$data['f']);
+    // Keep only shapes with a sane bounding box. A single corrupt shape (e.g. a BCC "areas"
+    // polygon with a garbage south edge) would otherwise blow up the grid size in floodmask.php.
+    $good = array_values(array_filter($data['f'], 'sfw_floodmask_valid_shape'));
+    $dropped = count($data['f']) - count($good);
+    if ($dropped > 0) {
+        sfw_log(sprintf('Flood mask: skipped %d shape(s) with an out-of-range box in %s.',
+            $dropped, $layer['key']));
+    }
+    if (!$good) {
+        continue;
+    }
+    array_push($features, ...$good);
     $used[] = $layer['key'];
 }
 

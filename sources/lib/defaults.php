@@ -181,6 +181,39 @@ return [
                 'catchment' => 'mary',
             ],
             [
+                'key'    => 'floodplain_goldcoast',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Gold Coast's sub-basin in this layer (bin/discover_catchment.php goldcoast,
+                // 25/10/2026). 'Albert River' in the box is the Logan-Albert catchment's.
+                'where'  => "sub_name IN ('Coomera & Nerang Rivers')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'goldcoast',
+            ],
+            [
+                'key'    => 'floodplain_logan',
+                'label'  => 'Possible floodplain, whole catchment (state, broad-scale)',
+                'hover'  => 'Possible floodplain (state broad-scale map)',
+                'url'    => 'https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/'
+                    . 'RapidHazardAssessment/MapServer/0',
+                // The Logan-Albert's sub-basins in this layer (bin/discover_catchment.php logan,
+                // 25/10/2026). The box also holds Brisbane's (Brisbane/Bremer/Lockyer) and the Gold
+                // Coast's (Coomera & Nerang Rivers), which are left to those catchments.
+                'where'  => "sub_name IN ('Logan River','Albert River')",
+                'batch'  => 1,
+                'offset' => 0.0002,
+                'min_m2' => 2000,
+                'on'     => true,
+                'source' => '© State of Queensland (Department of Resources), FloodCheck Rapid Hazard Assessment',
+                'catchment' => 'logan',
+            ],
+            [
                 'key'    => 'areas',
                 'label'  => 'Areas that can flood (Brisbane)',
                 'hover'  => 'Council flood awareness area',
@@ -393,6 +426,19 @@ return [
             ['key' => 'cedarpocket', 'name' => 'Cedar Pocket Dam', 'seqwater' => 'Cedar Pocket', 'lat' => -26.2114,
                 'lon' => 152.7927, 'level' => 'B540476-H', 'tail' => 'B540618-H', 'fsl' => null, 'node' => 'B540476-H',
                 'catchment' => 'mary'],
+            // Gold Coast and Logan-Albert dams (bin/discover_catchment.php, 25/10/2026). State comes
+            // from Seqwater; the network wiring (node/down) waits until these catchments have a
+            // data/network.csv section, so "water coming here" does not yet count their releases.
+            ['key' => 'hinze', 'name' => 'Hinze Dam', 'seqwater' => 'Hinze', 'lat' => -28.0507, 'lon' => 153.2824,
+                'level' => 'B540610-H', 'tail' => null, 'fsl' => null, 'catchment' => 'goldcoast'],
+            ['key' => 'littlenerang', 'name' => 'Little Nerang Dam', 'seqwater' => 'Little Nerang', 'lat' => -28.1467,
+                'lon' => 153.2850, 'level' => 'B540054-H', 'tail' => null, 'fsl' => null, 'catchment' => 'goldcoast'],
+            ['key' => 'wyaralong', 'name' => 'Wyaralong Dam', 'seqwater' => 'Wyaralong', 'lat' => -27.9092,
+                'lon' => 152.8806, 'level' => 'B540512-H', 'tail' => null, 'fsl' => null, 'catchment' => 'logan'],
+            ['key' => 'maroon', 'name' => 'Maroon Dam', 'seqwater' => 'Maroon', 'lat' => -28.1842, 'lon' => 152.6539,
+                'level' => 'B540475-H', 'tail' => 'B540591-H', 'fsl' => null, 'catchment' => 'logan'],
+            ['key' => 'nindooinbah', 'name' => 'Nindooinbah Dam', 'seqwater' => 'Nindooinbah', 'lat' => -27.9956,
+                'lon' => 153.0300, 'level' => 'B540480-H', 'tail' => null, 'fsl' => null, 'catchment' => 'logan'],
         ],
     ],
 
