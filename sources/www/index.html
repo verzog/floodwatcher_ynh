@@ -24,6 +24,12 @@
           <option value="brisbane">Brisbane River</option>
         </select>
       </label>
+      <label class="catchment-pick compare-pick">
+        <span class="visually-hidden">Compare with a second catchment</span>
+        <select id="compare-select" title="Also show a second catchment on the map">
+          <option value="">+ compare…</option>
+        </select>
+      </label>
       <span class="subtitle" id="catchment-hint">catchment rain &amp; river levels</span>
     </div>
     <div class="freshness" id="freshness" aria-live="polite">Loading…</div>
@@ -39,6 +45,7 @@
 
   <div class="alert" id="stale-alert" hidden></div>
   <div class="construction" id="construction-note" role="status" hidden></div>
+  <div class="compare-note" id="compare-note" role="status" hidden></div>
 
   <main class="layout">
     <div id="map" class="map" aria-label="Map of rain and stream gauges"></div>

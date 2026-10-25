@@ -92,6 +92,7 @@
     areaLayer: null,
     areaFallback: null,
     catchment: null,      // The catchment shown (its key).
+    compare: null,        // A second catchment also shown on the map, or null.
     catchments: [],       // [{key, name, status: 'live' | 'construction', bbox: [S, W, N, E]}].
     outlines: {},         // Catchment key -> its outline layer, once loaded.
     alertScope: 'here',   // Alerts card: 'here' (this catchment, in view) or 'all' (every catchment).
@@ -102,15 +103,28 @@
   // ---------- Catchments ----------
 
   var CATCHMENT_KEY = 'floodwatcher.catchment';
+  var COMPARE_KEY = 'floodwatcher.compare';
 
   /** The catchment something belongs to (data from before catchments were added is the Brisbane River's). */
   function catchmentOf(x) { return (x && x.catchment) || 'brisbane'; }
 
-  /** True if something belongs to the catchment on screen. */
-  function inCatchment(x) { return catchmentOf(x) === state.catchment; }
+  /** The catchments shown on the map: the chosen one, and the compare one if set (one or two keys). */
+  function activeCatchments() {
+    // Honour the compare catchment once it's a known catchment -- or before the list has loaded, so
+    // a shareable ?c=…&with=… link keeps both while the hash gauge is opened (it's cleared later if
+    // it turns out to be unknown).
+    return state.compare && state.compare !== state.catchment && (!state.catchments.length || catchmentInfo(state.compare))
+      ? [state.catchment, state.compare] : [state.catchment];
+  }
 
-  /** True if a BoM warning is about the catchment on screen. */
-  function warningHere(w) { return (w.catchments || ['brisbane']).indexOf(state.catchment) >= 0; }
+  /** True if something belongs to a catchment on screen. */
+  function inCatchment(x) { return activeCatchments().indexOf(catchmentOf(x)) >= 0; }
+
+  /** True if a BoM warning is about a catchment on screen. */
+  function warningHere(w) {
+    var act = activeCatchments();
+    return (w.catchments || ['brisbane']).some(function (k) { return act.indexOf(k) >= 0; });
+  }
 
   /** A catchment's entry by key (null if unknown). */
   function catchmentInfo(key) {
@@ -1643,9 +1657,21 @@
     list.textContent = '';
     status.hidden = false;
     status.textContent = 'Searching…';
-    // Search the catchment on screen and a little around it (south-east Queensland until it's known).
-    var c = catchmentInfo(state.catchment);
-    var b = c && c.bbox ? [c.bbox[1] - 0.3, c.bbox[2] + 0.3, c.bbox[3] + 0.3, c.bbox[0] - 0.3] : [151.2, -26.4, 153.6, -28.6];
+    // Search the catchments on screen and a little around them (both, when comparing; south-east
+    // Queensland until a box is known). bbox is [south, west, north, east]; the viewbox Nominatim
+    // wants is west, north, east, south.
+    var boxes = activeCatchments().map(catchmentInfo).filter(function (x) { return x && x.bbox; });
+    var b;
+    if (boxes.length) {
+      var s = Infinity, w = Infinity, n = -Infinity, e = -Infinity;
+      boxes.forEach(function (x) {
+        s = Math.min(s, x.bbox[0]); w = Math.min(w, x.bbox[1]);
+        n = Math.max(n, x.bbox[2]); e = Math.max(e, x.bbox[3]);
+      });
+      b = [w - 0.3, n + 0.3, e + 0.3, s - 0.3];
+    } else {
+      b = [151.2, -26.4, 153.6, -28.6];
+    }
     var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=au' +
       '&accept-language=en-AU&bounded=1&viewbox=' + b.map(function (v) { return v.toFixed(2); }).join(',') +
       '&q=' + encodeURIComponent(q);
@@ -2745,9 +2771,11 @@
 
   /** Zoom to the whole catchment on screen (its box, or its gauges until the box is known). */
   function fitCatchment() {
-    var c = catchmentInfo(state.catchment);
-    if (c && c.bbox) {
-      map.fitBounds([[c.bbox[0], c.bbox[1]], [c.bbox[2], c.bbox[3]]], { padding: [12, 12] });
+    var boxes = activeCatchments().map(catchmentInfo).filter(function (c) { return c && c.bbox; });
+    if (boxes.length) {
+      var b = L.latLngBounds([boxes[0].bbox[0], boxes[0].bbox[1]], [boxes[0].bbox[2], boxes[0].bbox[3]]);
+      boxes.slice(1).forEach(function (c) { b.extend([[c.bbox[0], c.bbox[1]], [c.bbox[2], c.bbox[3]]]); });
+      map.fitBounds(b, { padding: [12, 12] });
       return;
     }
     var pts = state.data ? state.data.sensors.filter(inCatchment).map(function (s) { return [s.lat, s.lon]; }) : [];
@@ -2760,27 +2788,30 @@
   /** Draw the outline of the catchment on screen (loaded once per catchment). */
   function drawOutline() {
     state.outlineLayer.clearLayers();
-    var key = state.catchment;
-    if (!/^[a-z0-9_]+$/.test(key || '')) { return; }
-    var show = function () {
-      if (state.catchment === key && state.outlines[key]) { state.outlineLayer.addLayer(state.outlines[key]); }
-    };
-    if (state.outlines[key]) { show(); return; }
-    fetch('data/catchments/' + key + '.json?t=' + (state.catchmentsGenerated || 0))
-      .then(function (r) { if (!r.ok) { throw new Error(r.status); } return r.json(); })
-      .then(function (data) {
-        var colour = cssVar('--ov-catchment') || cssVar('--ov-default');
-        var group = L.layerGroup();
-        (data.f || []).forEach(function (f) {
-          group.addLayer(L.polygon(f.r.map(decodeRing), {
-            renderer: floodRenderer, interactive: false, color: colour, weight: 2.5, opacity: 0.9,
-            dashArray: '10 6', fill: false
-          }));
-        });
-        state.outlines[key] = group;
-        show();
-      })
-      .catch(function () { /* No outline yet (not downloaded): the gauges still show. */ });
+    activeCatchments().forEach(function (key) {
+      if (!/^[a-z0-9_]+$/.test(key || '')) { return; }
+      var show = function () {
+        if (activeCatchments().indexOf(key) >= 0 && state.outlines[key]) {
+          state.outlineLayer.addLayer(state.outlines[key]);
+        }
+      };
+      if (state.outlines[key]) { show(); return; }
+      fetch('data/catchments/' + key + '.json?t=' + (state.catchmentsGenerated || 0))
+        .then(function (r) { if (!r.ok) { throw new Error(r.status); } return r.json(); })
+        .then(function (data) {
+          var colour = cssVar('--ov-catchment') || cssVar('--ov-default');
+          var group = L.layerGroup();
+          (data.f || []).forEach(function (f) {
+            group.addLayer(L.polygon(f.r.map(decodeRing), {
+              renderer: floodRenderer, interactive: false, color: colour, weight: 2.5, opacity: 0.9,
+              dashArray: '10 6', fill: false
+            }));
+          });
+          state.outlines[key] = group;
+          show();
+        })
+        .catch(function () { /* No outline yet (not downloaded): the gauges still show. */ });
+    });
   }
 
   /** The catchment chooser in the header: live catchments first, then those under construction. */
@@ -2813,7 +2844,7 @@
   function showCatchmentChrome() {
     var name = catchmentName(state.catchment);
     var live = catchmentLive(state.catchment) || !state.catchments.length;
-    document.title = 'Flood Watcher — ' + name + ' catchment';
+    document.title = 'Flood Watcher — ' + name + (state.compare ? ' and ' + catchmentName(state.compare) : '') + ' catchment';
     var sel = document.getElementById('catchment-select');
     if (sel.value !== state.catchment) { sel.value = state.catchment; }
     document.querySelectorAll('[data-catchment]').forEach(function (n) {
@@ -2824,8 +2855,35 @@
     note.hidden = live;
     note.textContent = live ? '' : 'Under construction: no gauges for the ' + name + ' catchment yet, just its outline. ' +
       'Choose one "with gauges" at the top for live readings.';
+    fillCompareSelect();
+    var cnote = document.getElementById('compare-note');
+    if (cnote) {
+      cnote.hidden = !state.compare;
+      cnote.textContent = state.compare
+        ? 'Showing the ' + name + ' and ' + catchmentName(state.compare) + ' catchments together'
+          + (SMALL_SCREEN.matches ? ' — on a small screen the map zooms out to fit both.' : '.')
+        : '';
+    }
     showWarnCatchment();
     drawOutline();
+  }
+
+  /** The "compare with" chooser: the live catchments except the one already chosen, plus a "none" option. */
+  function fillCompareSelect() {
+    var sel = document.getElementById('compare-select');
+    if (!sel) { return; }
+    sel.replaceChildren();
+    var none = el('option', null, '+ compare…');
+    none.value = '';
+    sel.appendChild(none);
+    state.catchments.filter(function (c) {
+      return c.status !== 'construction' && c.key !== state.catchment;
+    }).forEach(function (c) {
+      var o = el('option', null, c.name);
+      o.value = c.key;
+      sel.appendChild(o);
+    });
+    sel.value = state.compare && catchmentInfo(state.compare) ? state.compare : '';
   }
 
   /**
@@ -2835,19 +2893,16 @@
    * @param {string} key
    * @param {{keepView: boolean, initial: boolean}} [opts] keepView: don't zoom to the catchment.
    */
-  function setCatchment(key, opts) {
-    opts = opts || {};
-    if (state.catchments.length && !catchmentInfo(key)) { key = (catchmentInfo('brisbane') || state.catchments[0]).key; }
-    var changed = key !== state.catchment;
-    state.catchment = key;
-    memSet(CATCHMENT_KEY, key);
+  /** Put the chosen catchment (?c=) and the compare one (&with=) in the address. */
+  function syncCatchmentUrl() {
     var params = new URLSearchParams(location.search);
-    if (params.get('c') !== key) {
-      params.set('c', key);
-      history.replaceState(null, '', location.pathname + '?' + params.toString() + location.hash);
-    }
-    showCatchmentChrome();
-    if (!changed && !opts.initial) { return; }
+    params.set('c', state.catchment);
+    if (state.compare) { params.set('with', state.compare); } else { params.delete('with'); }
+    history.replaceState(null, '', location.pathname + '?' + params.toString() + location.hash);
+  }
+
+  /** Redraw everything that depends on which catchments are on screen (the chosen one and compare). */
+  function redrawCatchments() {
     var open = state.selected && state.data && state.data.sensors.find(function (x) { return x.id === state.selected; });
     if (!open || !inCatchment(open)) {
       if (state.selected) { history.replaceState(null, '', location.pathname + location.search); }
@@ -2866,7 +2921,32 @@
     state.predictDrawn = null;
     if (state.alerts) { showAlerts(); } else { showPredictions(); }
     renderAreas();
+  }
+
+  function setCatchment(key, opts) {
+    opts = opts || {};
+    if (state.catchments.length && !catchmentInfo(key)) { key = (catchmentInfo('brisbane') || state.catchments[0]).key; }
+    var changed = key !== state.catchment;
+    state.catchment = key;
+    memSet(CATCHMENT_KEY, key);
+    if (state.compare === key) { state.compare = null; memSet(COMPARE_KEY, null); }
+    syncCatchmentUrl();
+    showCatchmentChrome();
+    if (!changed && !opts.initial) { return; }
+    redrawCatchments();
     if (!opts.keepView) { fitCatchment(); }
+  }
+
+  /** Add or clear the second catchment shown alongside the chosen one. */
+  function setCompare(key) {
+    key = key && catchmentInfo(key) && key !== state.catchment ? key : null;
+    if (key === state.compare) { return; }
+    state.compare = key;
+    memSet(COMPARE_KEY, key);
+    syncCatchmentUrl();
+    showCatchmentChrome();
+    redrawCatchments();
+    fitCatchment();
   }
 
   /** The catchment to start with: the address (?c=), then this browser's last choice, then the default. */
@@ -2875,6 +2955,12 @@
     if (asked && /^[a-z0-9_]{1,32}$/.test(asked)) { return asked; }
     var saved = memGet(CATCHMENT_KEY);
     return typeof saved === 'string' && /^[a-z0-9_]{1,32}$/.test(saved) ? saved : 'brisbane';
+  }
+
+  /** The second (compare) catchment to start with: the address (&with=), then this browser's last choice. */
+  function startingCompare() {
+    var withKey = new URLSearchParams(location.search).get('with') || memGet(COMPARE_KEY);
+    return typeof withKey === 'string' && /^[a-z0-9_]{1,32}$/.test(withKey) ? withKey : null;
   }
 
   /** Load the list of catchments (all of Queensland), falling back to the live ones in the gauge data. */
@@ -2896,6 +2982,7 @@
         }
         var wanted = state.catchment;
         fillCatchmentSelect();
+        if (state.compare && !catchmentInfo(state.compare)) { state.compare = null; memSet(COMPARE_KEY, null); }
         setCatchment(catchmentInfo(wanted) ? wanted : (catchmentInfo('brisbane') || state.catchments[0]).key,
           { keepView: !!location.hash, initial: true });
       });
@@ -2904,6 +2991,11 @@
   document.getElementById('catchment-select').addEventListener('change', function (e) {
     setCatchment(e.target.value);
   });
+
+  var compareSelectEl = document.getElementById('compare-select');
+  if (compareSelectEl) {
+    compareSelectEl.addEventListener('change', function (e) { setCompare(e.target.value); });
+  }
 
   // A "Reset" button on the map, under the zoom buttons (alone on phones, where those are hidden).
   var ResetControl = L.Control.extend({
@@ -3051,6 +3143,7 @@
 
   // Start with the catchment from the address or this browser, before the data arrives.
   state.catchment = startingCatchment();
+  state.compare = startingCompare();
   state.alertScope = memGet('floodwatcher.alertScope') === 'all' ? 'all' : 'here';
   showCatchmentChrome();
   load().then(loadCatchments);

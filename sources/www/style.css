@@ -172,6 +172,18 @@ a { color: var(--accent); }
   color: var(--ink);
 }
 
+/* The second (compare) catchment picker reads as secondary to the main one. */
+.compare-pick select { font-weight: 400; color: var(--muted); }
+
+/* A calm note when two catchments are shown together. */
+.compare-note {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
 .freshness {
   color: var(--muted);
   font-size: 0.9rem;
@@ -1475,7 +1487,7 @@ body.panel-open .panel-tab-arrow { transform: rotate(180deg); }
   .panel-tab { padding: 10px 6px; font-size: 0.85rem; }
   .subtitle { display: none; }
   .catchment-pick select { font-size: 0.95rem; padding: 4px 6px; min-height: 36px; }
-  .construction { padding: 5px 12px; font-size: 0.8rem; }
+  .construction, .compare-note { padding: 5px 12px; font-size: 0.8rem; }
   .alert-scope { min-height: 40px; }
   /* Phones zoom with two fingers; the buttons would sit over popups on a small map. */
   .leaflet-control-zoom { display: none; }
