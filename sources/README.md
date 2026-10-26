@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.23
+# Flood Watcher (SEQ Flood Watch) — version 0.19.24
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,18 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.24
+
+- **River network for the Balonne–Condamine** (`data/network.csv`): the main stem (Warwick → Dalby
+  → Chinchilla → Condamine → Surat → St George), the Balonne down through Beardmore Dam, the Maranoa,
+  the lower-Balonne distributaries (Culgoa, Narran, Bokhara, Ballandool, Briarie), and the major
+  tributary creeks (Dogwood, Charleys, Myall, Oakey, Dalrymple, Bungil and more), so the "water
+  coming here" score and the "flood upstream" notice reach across the catchment. **Draft:** it's a
+  big inland catchment and few joins are confirmed, so almost every line is marked `check` and needs
+  a local eye to correct — the headwater order above Warwick and the tributary join points
+  especially. Small Toowoomba city creeks are left out; only the Beardmore and Leslie storages carry
+  the dam flag (the weirs pass flood flows).
 
 ## Changes in 0.19.23
 
