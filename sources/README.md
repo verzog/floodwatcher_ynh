@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.25
+# Flood Watcher (SEQ Flood Watch) — version 0.19.26
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,13 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.26
+
+- **Twin Bridges flood camera** (`data/cameras.csv`): added Somerset Regional Council's flood camera
+  for the Brisbane River crossing at Twin Bridges (between Lowood and Savages Crossing). There's no
+  BoM or state gauge at that crossing, so the camera is the only live view of it — the map marker
+  opens the council's camera page.
 
 ## Changes in 0.19.25
 
