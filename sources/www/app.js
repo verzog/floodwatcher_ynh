@@ -366,13 +366,16 @@
   function drawMarkers() {
     state.streamLayer.clearLayers();
     state.rainLayer.clearLayers();
+    var hidden = 0;
     state.data.sensors.forEach(function (s) {
       if (!inCatchment(s)) { return; }
-      if (state.declutter && !interesting(s)) { return; }
+      if (state.declutter && !interesting(s)) { hidden++; return; }
       var marker = s.type === 'stream' ? streamMarker(s) : rainMarker(s);
       marker.on('click', function () { select(s.id); });
       (s.community ? state.communityLayer : s.type === 'stream' ? state.streamLayer : state.rainLayer).addLayer(marker);
     });
+    state.hiddenCount = hidden; // How many gauges "Hide normal" is hiding right now.
+    syncDeclutterBtn();
     // On first load, show the whole catchment (unless a gauge link was opened).
     if (!state.fitted) {
       state.fitted = true;
@@ -3032,21 +3035,24 @@
   map.addControl(new ResetControl());
 
   // "Hide normal" / "Show all": a toggle under Reset that thins the map down to the gauges doing
-  // something (floods, rising, faulty, watched; rain gauges with rain), remembered in this browser.
-  var DECLUTTER_KEY = 'floodwatcher.declutter';
-  state.declutter = memGet(DECLUTTER_KEY) === true;
+  // something (floods, rising, faulty, watched; rain gauges with rain). Deliberately NOT remembered
+  // across visits — on a flood dashboard a fresh load must always show every gauge, so nobody
+  // mistakes a hidden gauge for a missing one. The button shows how many it is hiding.
+  state.declutter = false;
   var declutterBtn = null;
   function syncDeclutterBtn() {
     if (!declutterBtn) { return; }
-    declutterBtn.textContent = state.declutter ? '☰ Show all' : '☰ Hide normal';
+    var hidden = state.hiddenCount || 0;
+    declutterBtn.textContent = state.declutter
+      ? '☰ Show all' + (hidden ? ' (' + hidden + ' hidden)' : '')
+      : '☰ Hide normal';
     declutterBtn.title = state.declutter
-      ? 'Show every gauge again'
+      ? 'Show every gauge again' + (hidden ? ' — ' + hidden + ' hidden right now' : '')
       : 'Hide steady, below-flood gauges and dry rain gauges; keep floods, rising, faulty and watched';
     declutterBtn.setAttribute('aria-pressed', state.declutter ? 'true' : 'false');
   }
   function toggleDeclutter() {
     state.declutter = !state.declutter;
-    memSet(DECLUTTER_KEY, state.declutter);
     syncDeclutterBtn();
     if (state.data) {
       drawMarkers();
