@@ -82,3 +82,12 @@ site_id,name,catchment
 422404A,Maranoa River at Cashmere,condamine
 422501A,Wallam Creek at Cardiff,condamine
 422502A,Nebine Creek at Roseleigh Crossing,condamine
+# Gold Coast stations with river heights (bin/discover_catchment.php goldcoast, 27/10/2026). Several
+# sit at the same spot as a BoM gauge and merge into one marker on the map (lib/build_json.php).
+146002B,Nerang River at Glenhurst,goldcoast
+146010A,Coomera River at Army Camp,goldcoast
+146012A,Currumbin Creek at Nicolls Bridge,goldcoast
+146014A,Back Creek at Beechmont,goldcoast
+146015A,Nerang River at Numinbah,goldcoast
+146020A,Mudgeeraba Creek at Springbrook Road,goldcoast
+146095A,Tallebudgera Creek at Tallebudgera Creek Road,goldcoast
