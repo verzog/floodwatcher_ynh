@@ -725,6 +725,7 @@ body.panel-open .panel-tab-arrow { transform: rotate(180deg); }
   font-size: 0.9rem;
 }
 .crossing.under { color: var(--flood-major); font-weight: 700; }
+.crossing.provisional { color: var(--muted); font-style: italic; }
 .crossings-note { margin: 4px 0 0; color: var(--muted); }
 
 @media (prefers-color-scheme: dark) {

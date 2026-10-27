@@ -672,10 +672,14 @@ if ($crossfile !== '' && is_readable($crossfile) && ($fh = fopen($crossfile, 'r'
         if ($gauge === '' || $closes === false) {
             continue; // Needs a gauge to read against and a numeric closing level.
         }
+        $note = trim((string) ($c['note'] ?? ''));
         $bygauge[$gauge][] = [
             'name'     => trim((string) ($c['name'] ?? '')),
             'closes_m' => $closes,
-            'note'     => trim((string) ($c['note'] ?? '')),
+            'note'     => $note,
+            // Not yet confirmed (placeholder, or a "check" note): the page won't present it as a
+            // known closing level or give an estimate from it.
+            'provisional' => preg_match('/placeholder|uncalibrated|\bcheck\b/i', $note) === 1,
         ];
     }
     fclose($fh);

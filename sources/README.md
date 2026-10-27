@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.27
+# Flood Watcher (SEQ Flood Watch) — version 0.19.28
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,16 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.28
+
+- **Crossing closure heights: safer when the figure or the gauge is uncertain.** A crossing whose
+  value is still a placeholder (or marked `check`) is now shown as *"still being checked, so no
+  estimate yet"* in muted text, with no dial tick — it's never presented as a known closing level.
+  When the gauge reading itself is doubted (spike-doubt) or stale, a calibrated crossing no longer
+  claims the crossing is "under water"; it says the reading is uncertain and gives no estimate. The
+  "▸" dial tick is also hidden when it would sit on top of a flood-level label. (The Twin Bridges
+  placeholder stays until Vernon calibrates it from the camera.)
 
 ## Changes in 0.19.27
 

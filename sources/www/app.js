@@ -498,8 +498,18 @@
   /** One line: a crossing's closing level against the gauge's current reading, with an estimate. */
   function crossingLine(s, c) {
     var lv = s.latest, closes = c.closes_m, name = c.name || 'Crossing';
+    // Not yet calibrated: show the figure as a rough guide only, never a status or an estimate.
+    if (c.provisional) {
+      return name + ' — a closing level of about ' + closes.toFixed(1)
+        + ' m is still being checked, so no estimate yet.';
+    }
+    // A doubted or stale reading can't carry a confident "under water" / time-to-close call.
+    if (s.note || s.stale) {
+      return name + ' closes at about ' + closes.toFixed(1)
+        + ' m — the gauge reading is uncertain right now, so no estimate.';
+    }
     if (lv >= closes) {
-      return name + ' is under water — past the ' + closes.toFixed(1) + ' m closing level (now '
+      return name + ' is likely under water — past the ' + closes.toFixed(1) + ' m closing level (now '
         + lv.toFixed(2) + ' m).';
     }
     var to = closes - lv;
@@ -558,8 +568,12 @@
     var crossings = (s.crossings || []).filter(function (c) {
       return c && typeof c.closes_m === 'number';
     });
+    var tick = 0.04 * (hi - lo); // Don't stack a crossing tick on top of a flood-level label.
     crossings.forEach(function (c) {
-      if (c.closes_m >= lo && c.closes_m <= hi) { labels.push([c.closes_m, '▸ ' + c.closes_m.toFixed(1)]); }
+      if (c.provisional) { return; } // Uncalibrated: keep it out of the dial.
+      if (c.closes_m < lo || c.closes_m > hi) { return; }
+      var clash = labels.some(function (l) { return Math.abs(l[0] - c.closes_m) < tick; });
+      if (!clash) { labels.push([c.closes_m, '▸ ' + c.closes_m.toFixed(1)]); }
     });
 
     // A doubted reading (see the note above the dial) isn't shown as a flood.
@@ -590,7 +604,10 @@
       var box = el('div', 'crossings');
       box.appendChild(el('p', 'crossings-head', crossings.length > 1 ? 'Nearby crossings' : 'Nearby crossing'));
       crossings.forEach(function (c) {
-        box.appendChild(el('p', 'crossing' + (s.latest >= c.closes_m ? ' under' : ''), crossingLine(s, c)));
+        // Red "under water" styling only for a calibrated crossing read by a trustworthy gauge.
+        var under = !c.provisional && !s.note && !s.stale && s.latest >= c.closes_m;
+        box.appendChild(el('p', 'crossing' + (under ? ' under' : '') + (c.provisional ? ' provisional' : ''),
+          crossingLine(s, c)));
       });
       box.appendChild(el('p', 'small crossings-note',
         'A guide only, not an official closure — follow QLDTraffic and your council.'));
