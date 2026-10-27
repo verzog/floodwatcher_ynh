@@ -655,6 +655,49 @@ if ($camfile !== '' && is_readable($camfile) && ($fh = fopen($camfile, 'r')) !==
     fclose($fh);
 }
 
+// Crossing closure heights (data/crossings.csv): attach each to the gauge it is read against, so the
+// page's dial can show "closes here" and estimate when. There is no feed for this; each value is
+// curated (ideally calibrated against a camera) and marked "check" until confirmed.
+$crossfile = $config['crossings_file'] ?? '';
+if ($crossfile !== '' && is_readable($crossfile) && ($fh = fopen($crossfile, 'r')) !== false) {
+    $bygauge = [];
+    $head = fgetcsv($fh, null, ',', '"', '');
+    while ($head && ($row = fgetcsv($fh, null, ',', '"', '')) !== false) {
+        if (count($row) !== count($head)) {
+            continue;
+        }
+        $c = array_combine($head, $row);
+        $gauge = trim((string) ($c['gauge'] ?? ''));
+        $closes = filter_var($c['closes_m'] ?? '', FILTER_VALIDATE_FLOAT);
+        if ($gauge === '' || $closes === false) {
+            continue; // Needs a gauge to read against and a numeric closing level.
+        }
+        $note = trim((string) ($c['note'] ?? ''));
+        $bygauge[$gauge][] = [
+            'name'     => trim((string) ($c['name'] ?? '')),
+            'closes_m' => $closes,
+            'note'     => $note,
+            // Not yet confirmed (placeholder, or a "check" note): the page won't present it as a
+            // known closing level or give an estimate from it.
+            'provisional' => preg_match('/placeholder|uncalibrated|\bcheck\b/i', $note) === 1,
+        ];
+    }
+    fclose($fh);
+    foreach ($payload['sensors'] as &$marker) {
+        $ids = array_merge([$marker['id']], array_column($marker['others'] ?? [], 'id'));
+        $cross = [];
+        foreach ($ids as $gid) {
+            if (isset($bygauge[$gid])) {
+                $cross = array_merge($cross, $bygauge[$gid]);
+            }
+        }
+        if ($cross) {
+            $marker['crossings'] = $cross;
+        }
+    }
+    unset($marker);
+}
+
 $flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
 foreach ($series as $id => $data) {
     sfw_write_atomic("{$outdir}/series/{$id}.json", json_encode($data, $flags));

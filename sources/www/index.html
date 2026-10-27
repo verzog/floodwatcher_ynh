@@ -50,14 +50,22 @@
   <main class="layout">
     <div id="map" class="map" aria-label="Map of rain and stream gauges"></div>
 
-    <button type="button" class="panel-tab" id="panel-tab" aria-controls="panel" aria-expanded="false"
-      title="Show search, gauge details and map options">
-      <span class="panel-tab-arrow" aria-hidden="true">◀</span>
-      <span class="panel-tab-text">Details</span>
-      <span class="panel-tab-dot" id="panel-tab-dot" hidden></span>
-    </button>
+    <div class="panel-tabs" role="group" aria-label="Open the side panel">
+      <button type="button" class="panel-tab" id="panel-tab" aria-controls="panel" aria-expanded="false"
+        title="Show search and gauge details">
+        <span class="panel-tab-arrow" aria-hidden="true">◀</span>
+        <span class="panel-tab-text">Details</span>
+        <span class="panel-tab-dot" id="panel-tab-dot" hidden></span>
+      </button>
+      <button type="button" class="panel-tab" id="panel-tab-settings" aria-controls="panel" aria-expanded="false"
+        title="Show map options, flood maps and the legend">
+        <span class="panel-tab-arrow" aria-hidden="true">◀</span>
+        <span class="panel-tab-text">Settings &amp; Legend</span>
+      </button>
+    </div>
 
-    <aside class="panel" id="panel" aria-label="Search, gauge details and map options">
+    <aside class="panel" id="panel" aria-label="Side panel">
+      <div class="panel-view" id="view-details">
       <section class="search" aria-label="Find a place">
         <form id="search-form" role="search">
           <label for="search-input" class="visually-hidden">Find a place or address</label>
@@ -71,7 +79,9 @@
       <section class="detail" id="detail" aria-live="polite">
         <p class="hint">Choose a gauge on the map to see its readings and last 3 days.</p>
       </section>
+      </div><!-- /#view-details -->
 
+      <div class="panel-view" id="view-settings">
       <section class="notify" id="notify" aria-label="Notifications" hidden>
         <h2>Notifications</h2>
         <p class="small" id="notify-status" aria-live="polite"></p>
@@ -184,6 +194,7 @@
         Flood maps: <span id="overlay-credits">Brisbane City Council; State of Queensland</span>. Place search:
         <a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap Nominatim</a>.
       </footer>
+      </div><!-- /#view-settings -->
     </aside>
   </main>
 

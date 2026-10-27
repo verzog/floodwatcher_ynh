@@ -6,7 +6,7 @@ id = "floodwatcher"
 name = "Flood Watcher"
 description.en = "Community flood dashboard for the Brisbane River catchment: river levels, rain, warnings and alerts"
 
-version = "0.19.26~ynh1"
+version = "0.19.29~ynh1"
 
 maintainers = ["verzog"]
 

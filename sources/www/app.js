@@ -488,6 +488,42 @@
    * Dial for a river gauge: the level against BoM's flood levels (or the 3-day range when a
    * gauge has none), plus a one-line summary of how far it is from flooding.
    */
+  /** A rough time, for "about N away". */
+  function fmtEta(hrs) {
+    if (hrs < 1) { return Math.max(5, Math.round(hrs * 60 / 5) * 5) + ' min'; }
+    if (hrs < 10) { return hrs.toFixed(1).replace(/\.0$/, '') + ' h'; }
+    return Math.round(hrs) + ' h';
+  }
+
+  /** One line: a crossing's closing level against the gauge's current reading, with an estimate. */
+  function crossingLine(s, c) {
+    var lv = s.latest, closes = c.closes_m, name = c.name || 'Crossing';
+    // Not yet calibrated: show the figure as a rough guide only, never a status or an estimate.
+    if (c.provisional) {
+      return name + ' — a closing level of about ' + closes.toFixed(1)
+        + ' m is still being checked, so no estimate yet.';
+    }
+    // A doubted or stale reading can't carry a confident "under water" / time-to-close call.
+    if (s.note || s.stale) {
+      return name + ' closes at about ' + closes.toFixed(1)
+        + ' m — the gauge reading is uncertain right now, so no estimate.';
+    }
+    if (lv >= closes) {
+      return name + ' is likely under water — past the ' + closes.toFixed(1) + ' m closing level (now '
+        + lv.toFixed(2) + ' m).';
+    }
+    var to = closes - lv;
+    var msg = name + ' closes at ' + closes.toFixed(1) + ' m — now ' + lv.toFixed(2) + ' m, '
+      + to.toFixed(2) + ' m to go';
+    var rate = s.rate_per_hr;
+    if (typeof rate === 'number' && rate > 0.02) {
+      msg += '; about ' + fmtEta(to / rate) + ' away at the current rise';
+    } else if (s.trend === 'falling') {
+      msg += '; falling for now';
+    }
+    return msg + '.';
+  }
+
   function riverDial(s) {
     var lv = s.latest;
     var f = s.flood || {};
@@ -528,6 +564,18 @@
       bands.push([lo, hi, '--dial-track']);
     }
 
+    // Nearby crossing closure levels (data/crossings.csv): mark any that fall within the dial's range.
+    var crossings = (s.crossings || []).filter(function (c) {
+      return c && typeof c.closes_m === 'number';
+    });
+    var tick = 0.04 * (hi - lo); // Don't stack a crossing tick on top of a flood-level label.
+    crossings.forEach(function (c) {
+      if (c.provisional) { return; } // Uncalibrated: keep it out of the dial.
+      if (c.closes_m < lo || c.closes_m > hi) { return; }
+      var clash = labels.some(function (l) { return Math.abs(l[0] - c.closes_m) < tick; });
+      if (!clash) { labels.push([c.closes_m, '▸ ' + c.closes_m.toFixed(1)]); }
+    });
+
     // A doubted reading (see the note above the dial) isn't shown as a flood.
     var shownClass = s.note ? null : s.flood_class;
     var fill = flooding(shownClass) ? 'var(--flood-' + shownClass + ')' : 'var(--water)';
@@ -551,6 +599,20 @@
       note = FLOOD_LABELS[s.flood_class] + ': ' + (lv - minor).toFixed(2) + ' m above minor flood level';
     }
     wrap.appendChild(el('p', 'dial-note' + (flooding(shownClass) ? ' flood-' + shownClass : ''), note));
+
+    if (crossings.length) {
+      var box = el('div', 'crossings');
+      box.appendChild(el('p', 'crossings-head', crossings.length > 1 ? 'Nearby crossings' : 'Nearby crossing'));
+      crossings.forEach(function (c) {
+        // Red "under water" styling only for a calibrated crossing read by a trustworthy gauge.
+        var under = !c.provisional && !s.note && !s.stale && s.latest >= c.closes_m;
+        box.appendChild(el('p', 'crossing' + (under ? ' under' : '') + (c.provisional ? ' provisional' : ''),
+          crossingLine(s, c)));
+      });
+      box.appendChild(el('p', 'small crossings-note',
+        'A guide only, not an official closure — follow QLDTraffic and your council.'));
+      wrap.appendChild(box);
+    }
     return wrap;
   }
 
@@ -3130,33 +3192,53 @@
       });
   }
 
-  // ---------- Side panel (search, gauge details, options): opened and closed by its tab ----------
+  // ---------- Side panel: two views (Details, Settings & Legend), opened by their tabs ----------
 
-  var PANEL_KEY = 'floodwatcher.panelOpen';
+  var PANEL_KEY = 'floodwatcher.panelView'; // '', 'details' or 'settings'.
   var panelTab = document.getElementById('panel-tab');
+  var panelTabSettings = document.getElementById('panel-tab-settings');
 
-  /** Open or close the side panel; remembered in this browser. */
-  function setPanel(open) {
+  /** Which view is showing, or '' when the panel is closed. */
+  function panelView() {
+    if (!document.body.classList.contains('panel-open')) { return ''; }
+    return document.body.classList.contains('panel-view-settings') ? 'settings' : 'details';
+  }
+
+  /** Show a view ('details' or 'settings'), or close the panel (''). Remembered in this browser. */
+  function setPanel(view) {
+    var open = view === 'details' || view === 'settings';
     document.body.classList.toggle('panel-open', open);
-    panelTab.setAttribute('aria-expanded', open ? 'true' : 'false');
-    panelTab.title = open ? 'Hide the panel' : 'Show search, gauge details and map options';
-    if (open) { document.getElementById('panel-tab-dot').hidden = true; }
-    memSet(PANEL_KEY, open);
+    document.body.classList.toggle('panel-view-settings', view === 'settings');
+    panelTab.classList.toggle('active', view === 'details');
+    panelTabSettings.classList.toggle('active', view === 'settings');
+    panelTab.setAttribute('aria-expanded', view === 'details' ? 'true' : 'false');
+    panelTabSettings.setAttribute('aria-expanded', view === 'settings' ? 'true' : 'false');
+    if (view === 'details') { document.getElementById('panel-tab-dot').hidden = true; }
+    memSet(PANEL_KEY, open ? view : '');
   }
 
-  /** Something new in the panel while it's closed: a dot on the tab says so. */
+  /** Something new for the Details view: bring it up if the panel's open, else dot its tab. */
   function panelNudge() {
-    if (!document.body.classList.contains('panel-open')) { document.getElementById('panel-tab-dot').hidden = false; }
+    var v = panelView();
+    if (v === '') { document.getElementById('panel-tab-dot').hidden = false; }
+    else if (v === 'settings') { setPanel('details'); } // Show the gauge the user just chose.
   }
 
-  panelTab.addEventListener('click', function () { setPanel(!document.body.classList.contains('panel-open')); });
+  panelTab.addEventListener('click', function () {
+    setPanel(panelView() === 'details' ? '' : 'details');
+  });
+  panelTabSettings.addEventListener('click', function () {
+    setPanel(panelView() === 'settings' ? '' : 'settings');
+  });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && document.body.classList.contains('panel-open')) {
-      setPanel(false);
-      panelTab.focus();
+      var active = panelView() === 'settings' ? panelTabSettings : panelTab;
+      setPanel('');
+      active.focus();
     }
   });
-  setPanel(memGet(PANEL_KEY) === true);
+  var savedView = memGet(PANEL_KEY);
+  setPanel(savedView === 'details' || savedView === 'settings' ? savedView : '');
 
   // ---------- Controls ----------
 

@@ -389,6 +389,11 @@ return [
     // Flood cameras shown on the map (edit this list; build_json.php publishes it).
     'cameras_file' => dirname(__DIR__) . '/data/cameras.csv',
 
+    // Bridge/crossing closure heights (data/crossings.csv): the gauge reading at which a nearby
+    // crossing goes under, so a gauge's dial can show "closes here" and an estimate of when. There
+    // is no feed for this; each is curated (ideally calibrated against a camera) and marked "check".
+    'crossings_file' => dirname(__DIR__) . '/data/crossings.csv',
+
     'lock_file' => null, // Default: collector.lock in 'var_dir'.
 
     // Where the dashboard's data files are written (My Webapp's public www/data folder).
