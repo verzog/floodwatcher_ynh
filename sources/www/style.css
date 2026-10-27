@@ -605,13 +605,30 @@ body.panel-open .panel {
   transition: transform 0.25s ease, visibility 0s;
 }
 
-/* The tab on the right edge of the map that opens and closes the panel. */
-.panel-tab {
+/* The panel holds two views (Details, Settings & Legend); the active tab picks which shows. */
+.panel-view {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+body:not(.panel-view-settings) #view-details { display: flex; }
+body.panel-view-settings #view-settings { display: flex; }
+
+/* Two tabs stacked on the right edge of the map, each opening the panel to its view. */
+.panel-tabs {
   position: absolute;
   top: 50%;
   right: 0;
   z-index: 1101;
   transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: right 0.25s ease;
+}
+body.panel-open .panel-tabs { right: min(420px, 88vw); }
+
+.panel-tab {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -622,17 +639,19 @@ body.panel-open .panel {
   font-weight: 700;
   color: #ffffff;
   background: var(--accent-strong, #2462a3);
+  opacity: 0.72; /* Inactive tabs sit back a little; the open one is full strength. */
   border: none;
   border-radius: 8px 0 0 8px;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-  transition: right 0.25s ease;
+  transition: opacity 0.2s ease;
 }
+.panel-tab:hover { opacity: 0.9; }
+.panel-tab.active { opacity: 1; }
 
 .panel-tab-text { writing-mode: vertical-rl; transform: rotate(180deg); }
 .panel-tab-arrow { transition: transform 0.25s ease; }
-body.panel-open .panel-tab { right: min(420px, 88vw); }
-body.panel-open .panel-tab-arrow { transform: rotate(180deg); }
+.panel-tab.active .panel-tab-arrow { transform: rotate(180deg); }
 
 /* Something new in the panel (a gauge chosen, search results) while it's closed. */
 .panel-tab-dot {
