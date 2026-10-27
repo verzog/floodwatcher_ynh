@@ -488,6 +488,32 @@
    * Dial for a river gauge: the level against BoM's flood levels (or the 3-day range when a
    * gauge has none), plus a one-line summary of how far it is from flooding.
    */
+  /** A rough time, for "about N away". */
+  function fmtEta(hrs) {
+    if (hrs < 1) { return Math.max(5, Math.round(hrs * 60 / 5) * 5) + ' min'; }
+    if (hrs < 10) { return hrs.toFixed(1).replace(/\.0$/, '') + ' h'; }
+    return Math.round(hrs) + ' h';
+  }
+
+  /** One line: a crossing's closing level against the gauge's current reading, with an estimate. */
+  function crossingLine(s, c) {
+    var lv = s.latest, closes = c.closes_m, name = c.name || 'Crossing';
+    if (lv >= closes) {
+      return name + ' is under water — past the ' + closes.toFixed(1) + ' m closing level (now '
+        + lv.toFixed(2) + ' m).';
+    }
+    var to = closes - lv;
+    var msg = name + ' closes at ' + closes.toFixed(1) + ' m — now ' + lv.toFixed(2) + ' m, '
+      + to.toFixed(2) + ' m to go';
+    var rate = s.rate_per_hr;
+    if (typeof rate === 'number' && rate > 0.02) {
+      msg += '; about ' + fmtEta(to / rate) + ' away at the current rise';
+    } else if (s.trend === 'falling') {
+      msg += '; falling for now';
+    }
+    return msg + '.';
+  }
+
   function riverDial(s) {
     var lv = s.latest;
     var f = s.flood || {};
@@ -528,6 +554,14 @@
       bands.push([lo, hi, '--dial-track']);
     }
 
+    // Nearby crossing closure levels (data/crossings.csv): mark any that fall within the dial's range.
+    var crossings = (s.crossings || []).filter(function (c) {
+      return c && typeof c.closes_m === 'number';
+    });
+    crossings.forEach(function (c) {
+      if (c.closes_m >= lo && c.closes_m <= hi) { labels.push([c.closes_m, '▸ ' + c.closes_m.toFixed(1)]); }
+    });
+
     // A doubted reading (see the note above the dial) isn't shown as a flood.
     var shownClass = s.note ? null : s.flood_class;
     var fill = flooding(shownClass) ? 'var(--flood-' + shownClass + ')' : 'var(--water)';
@@ -551,6 +585,17 @@
       note = FLOOD_LABELS[s.flood_class] + ': ' + (lv - minor).toFixed(2) + ' m above minor flood level';
     }
     wrap.appendChild(el('p', 'dial-note' + (flooding(shownClass) ? ' flood-' + shownClass : ''), note));
+
+    if (crossings.length) {
+      var box = el('div', 'crossings');
+      box.appendChild(el('p', 'crossings-head', crossings.length > 1 ? 'Nearby crossings' : 'Nearby crossing'));
+      crossings.forEach(function (c) {
+        box.appendChild(el('p', 'crossing' + (s.latest >= c.closes_m ? ' under' : ''), crossingLine(s, c)));
+      });
+      box.appendChild(el('p', 'small crossings-note',
+        'A guide only, not an official closure — follow QLDTraffic and your council.'));
+      wrap.appendChild(box);
+    }
     return wrap;
   }
 

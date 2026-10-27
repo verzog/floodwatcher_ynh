@@ -707,6 +707,26 @@ body.panel-open .panel-tab-arrow { transform: rotate(180deg); }
 .dial-note.flood-moderate { color: #b4500a; }
 .dial-note.flood-major { color: var(--flood-major); }
 
+/* Nearby crossing closure levels under the dial. */
+.crossings {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.03));
+}
+.crossings-head {
+  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.crossing {
+  margin: 2px 0;
+  font-size: 0.9rem;
+}
+.crossing.under { color: var(--flood-major); font-weight: 700; }
+.crossings-note { margin: 4px 0 0; color: var(--muted); }
+
 @media (prefers-color-scheme: dark) {
   .dial-note.flood-minor { color: var(--flood-minor); }
   .dial-note.flood-moderate { color: #f39a52; }
