@@ -227,6 +227,38 @@ B540714-H,B540797-H,,Cannon Creek at Kooralbyn; check: joins the Logan River nea
 B540712-H,B540475-H,dam,Burnett Creek inflow into Maroon Dam
 B540475-H,B540591-H,,Maroon Dam to tailwater
 B540591-H,B040946-H,,Burnett Creek; check: joins the Logan River near Rathdowney
+# ======== Pine and Caboolture catchment ========
+# Ordered by gauge position (bin/discover_catchment.php pine, 28/10/2026). The North Pine and South
+# Pine join near Murrumba Downs to form the Pine River, which reaches Bramble Bay; the Caboolture
+# River and Burpengary Creek reach Deception Bay separately. North Pine Dam (Lake Samsonvale) and
+# Lake Kurwongbah (Sideling Creek) sit on the North Pine system; their releases start counting once
+# the dams are wired in. Short tidal/coastal and minor creeks are left out for now (King John,
+# Lagoon, Saltwater, Freshwater, Little Burpengary, Beachmere, Samford, Wararba, Terrors, Kobble,
+# and the Brisbane-metro creeks — Kedron Brook, Cabbage Tree, Downfall — which are the Brisbane
+# River's, not Pine's). Every "check" needs confirming by someone who knows the rivers.
+# ---- North Pine River ----
+B540826-H,B540442-H,,Lees Crossing to Dayboro; check
+B540442-H,B540277-H,dam,Dayboro into North Pine Dam (Lake Samsonvale)
+B540277-H,B540412-H,,North Pine Dam to Youngs Crossing
+B540412-H,B540439-H,,Youngs Crossing to Lawnton
+B540439-H,B540417-H,,Lawnton to Murrumba Downs (tidal)
+# ---- Sideling Creek (Lake Kurwongbah) ----
+B540204-H,B540439-H,,Lake Kurwongbah to the North Pine River near Lawnton; check
+# ---- South Pine River ----
+B540739-H,B540398-H,,Samford Valley to Drapers Crossing; check
+B540398-H,B540794-H,,Drapers Crossing to Eatons Hill; check
+B540794-H,B540415-H,,Eatons Hill to Cash's Crossing; check
+B540415-H,B540625-H,,Cash's Crossing to Strathpine
+B540625-H,B540417-H,,Strathpine to the Pine River; check: North/South Pine confluence at Murrumba Downs
+# ---- Caboolture River ----
+B540357-H,B540243-H,,Upper Caboolture to Caboolture WTP
+B540243-H,B540660-H,,Caboolture WTP to Short St
+B540660-H,B540558-H,,Short St to Beachmere (Riversleigh Rd); check
+B540558-H,B540740-H,,Beachmere Riversleigh Rd to St Smith Rd (tidal); check
+# ---- Burpengary Creek ----
+B540508-H,B540245-H,,Narangba (Oakey Flat Rd) to Burpengary (Rowley Rd); check
+B540245-H,B540619-H,,Rowley Rd to Mathew Cr
+B540619-H,B540242-H,,Mathew Cr to Dale St; reaches Deception Bay (tidal)
 # ======== Balonne–Condamine catchment ========
 # DRAFT, ordered from BoM gauge positions (bin/discover_catchment.php condamine, 25/10/2026). This
 # is a big inland catchment and few joins are confirmed, so almost every line is marked "check" —

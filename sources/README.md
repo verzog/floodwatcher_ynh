@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.31
+# Flood Watcher (SEQ Flood Watch) — version 0.19.32
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,16 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.32
+
+- **Pine and Caboolture river network.** Added a `data/network.csv` section for the Pine–Caboolture
+  catchment — the North Pine (through North Pine Dam / Lake Samsonvale), South Pine, Caboolture
+  River, Burpengary Creek and Sideling Creek, ordered upstream to downstream from the BoM gauge
+  positions. This drives the "flood event upstream" notice and the "water coming here" score for
+  Pine gauges. Uncertain joins are marked `check`; minor tidal and coastal creeks are left out for
+  now. (The catchment's BoM river and rain gauges were already being collected via `bom_exclude.csv`
+  + its outline; dams and state gauges follow.)
 
 ## Changes in 0.19.31
 
