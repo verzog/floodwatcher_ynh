@@ -135,3 +135,10 @@ site_id,name,catchment
 136306A,Cadarga Creek at Brovinia Station,burnett
 136315A,Boyne River at Carters,burnett
 136319A,Boyne River at Cooranga,burnett
+# Maroochy stations with river heights (bin/discover_catchment.php maroochy, 28/10/2026). All five
+# sit at the same spot as a BoM gauge and merge into one marker.
+141001B,South Maroochy River at Kiamba,maroochy
+141004B,South Maroochy River at Yandina,maroochy
+141006A,Mooloolah River at Mooloolah,maroochy
+141009A,North Maroochy River at Eumundi,maroochy
+141010A,Coochin Creek at Mawsons Road,maroochy
