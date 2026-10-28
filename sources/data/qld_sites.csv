@@ -91,3 +91,19 @@ site_id,name,catchment
 146015A,Nerang River at Numinbah,goldcoast
 146020A,Mudgeeraba Creek at Springbrook Road,goldcoast
 146095A,Tallebudgera Creek at Tallebudgera Creek Road,goldcoast
+# Logan and Albert River stations with river heights (bin/discover_catchment.php logan, 28/10/2026).
+# Some sit at the same spot as a BoM gauge and merge into one marker (lib/build_json.php).
+145003B,Logan R at Forest Home,logan
+145008A,Logan River at Round Mtn,logan
+145010A,Running Ck at Dieckmans Bridge,logan
+145011A,Teviot Brook at Croftby,logan
+145014A,Logan River at Yarrahappini,logan
+145018A,Burnett Ck at Upstream Maroon Dam,logan
+145020A,Logan R at Rathdowney,logan
+145026A,Christmas Creek at Tramway Lane,logan
+145027A,Palen Creek at Ward Road,logan
+145031A,Teviot Brook at Coulson,logan
+145101D,Albert River at Lumeah Number 2,logan
+145102B,Albert River at Bromfleet,logan
+145103A,Cainbable Creek at The Gorge,logan
+145107A,Canungra Creek at Main Road Bridge,logan
