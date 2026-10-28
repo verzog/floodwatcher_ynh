@@ -107,3 +107,31 @@ site_id,name,catchment
 145102B,Albert River at Bromfleet,logan
 145103A,Cainbable Creek at The Gorge,logan
 145107A,Canungra Creek at Main Road Bridge,logan
+# Burnett River stations with river heights (bin/discover_catchment.php burnett, 28/10/2026). A big
+# inland basin; many sit at the same spot as a BoM gauge and merge into one marker.
+136002D,Burnett River at Mount Lawless,burnett
+136004A,Burnett River at Jones Weir Headwater,burnett
+136006A,Reid Creek at Mungy,burnett
+136007A,Burnett River at Figtree Creek,burnett
+136011A,Degilbo Creek at Coringa,burnett
+136017B,Burnett River at Gayndah Flume,burnett
+136094A,Burnett River at Jones Weir Tailwater,burnett
+136101C,Three Moon Creek at Abercorn,burnett
+136103B,Burnett River at Ceratodus,burnett
+136106A,Burnett River at Eidsvold,burnett
+136108A,Monal Creek at Upper Monal,burnett
+136111A,Splinter Creek at Dakiel,burnett
+136112A,Burnett River at Yarrol,burnett
+136118A,Eastern Creek at Lands End,burnett
+136202D,Barambah Creek at Litzows,burnett
+136203A,Barkers Creek at Brooklands,burnett
+136207A,Barambah Creek at Ban Ban,burnett
+136208A,Boonara Creek at Ettiewyn,burnett
+136209A,Barker Creek at Glenmore,burnett
+136213A,Barambah Creek at West Barambah,burnett
+136301B,Stuart River at Weens Bridge,burnett
+136304A,Stuart River at Proston Rifle Range,burnett
+136305A,Auburn River at Dykehead,burnett
+136306A,Cadarga Creek at Brovinia Station,burnett
+136315A,Boyne River at Carters,burnett
+136319A,Boyne River at Cooranga,burnett

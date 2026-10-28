@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.32
+# Flood Watcher (SEQ Flood Watch) — version 0.19.33
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,14 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.33
+
+- **Burnett River state gauges.** Added the 26 Queensland WMIP stations that report heights in the
+  Burnett catchment (the Burnett River itself plus the Barambah, Barker, Boyne, Auburn, Stuart and
+  Three Moon systems) to `data/qld_sites.csv`, so `collect_qld` now polls them. The Burnett's BoM
+  river and rain gauges were already collected via the shared pages; this fills in the state gauges.
+  Several share a spot with a BoM gauge and merge into one marker.
 
 ## Changes in 0.19.32
 
