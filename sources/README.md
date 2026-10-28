@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.33
+# Flood Watcher (SEQ Flood Watch) — version 0.19.34
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,13 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.34
+
+- **Maroochy River state gauges.** Added the five Queensland WMIP stations that report heights in
+  the Maroochy catchment (South/North Maroochy, Mooloolah and Coochin systems) to
+  `data/qld_sites.csv`. The Maroochy's BoM gauges were already collected; these fill in the state
+  gauges and merge with their co-located BoM markers.
 
 ## Changes in 0.19.33
 
