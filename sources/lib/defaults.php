@@ -512,6 +512,16 @@ return [
                 'level' => 'B540475-H', 'tail' => 'B540591-H', 'fsl' => null, 'node' => 'B540475-H', 'catchment' => 'logan'],
             ['key' => 'nindooinbah', 'name' => 'Nindooinbah Dam', 'seqwater' => 'Nindooinbah', 'lat' => -27.9956,
                 'lon' => 153.0300, 'level' => 'B540480-H', 'tail' => null, 'fsl' => null, 'catchment' => 'logan'],
+            // Pine catchment dams (bin/discover_catchment.php pine, 28/10/2026). North Pine Dam (Lake
+            // Samsonvale) runs at a reduced full supply level, so fsl is null; flood storage comes from
+            // Seqwater's table. Lake Kurwongbah (Sideling Creek) is a small supply dam feeding the North
+            // Pine River near Lawnton. The 'seqwater' labels are read from the dam-levels page; check.
+            ['key' => 'northpine', 'name' => 'North Pine Dam', 'seqwater' => 'North Pine', 'lat' => -27.2667,
+                'lon' => 152.9333, 'level' => 'B540277-H', 'tail' => 'B540412-H', 'fsl' => null,
+                'node' => 'B540277-H', 'catchment' => 'pine'],
+            ['key' => 'kurwongbah', 'name' => 'Lake Kurwongbah', 'seqwater' => 'Sideling Creek', 'lat' => -27.2572,
+                'lon' => 152.9528, 'level' => 'B540605-H', 'tail' => null, 'fsl' => null,
+                'node' => 'B540204-H', 'catchment' => 'pine'],
         ],
     ],
 
