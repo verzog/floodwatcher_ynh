@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.35
+# Flood Watcher (SEQ Flood Watch) — version 0.19.36
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,15 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.36
+
+- **Heading north: Boyne, Calliope and Fitzroy outlines.** Added the Boyne River (Gladstone),
+  Calliope River and Fitzroy River catchments to the live list (basins 133, 132, 130) — the first
+  step of extending up the Central Queensland coast. They come in as catchment outlines; their BoM
+  map pages, state gauges and river networks are added in the following releases (and unlike the
+  south-east, they have no live dam feed — Sunwater, not Seqwater). Fitzroy is a very large inland
+  catchment (Rockhampton to Emerald/Springsure).
 
 ## Changes in 0.19.35
 

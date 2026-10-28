@@ -152,6 +152,13 @@ return [
             'burnett'    => ['name' => 'Burnett River', 'basin' => '136'],
             'kolan'      => ['name' => 'Kolan River', 'basin' => '135'],
             'baffle'     => ['name' => 'Baffle Creek', 'basin' => '134'],
+            // Central Queensland coast, north of Baffle Creek (basin numbers run down going north).
+            // These lean on Central Qld BoM map pages not yet collected and have no dam feed
+            // (Sunwater, not Seqwater), so they start as outlines until their pages/gauges are added.
+            // Confirm each number against the fetch_catchments.php log.
+            'boyne'      => ['name' => 'Boyne River (Gladstone)', 'basin' => '133'],
+            'calliope'   => ['name' => 'Calliope River', 'basin' => '132'],
+            'fitzroy'    => ['name' => 'Fitzroy River', 'basin' => '130'],
             // Inland (Murray–Darling): mostly state (WMIP) gauges, its own BoM map pages, and
             // Sunwater dams (no feed yet). Basin 422 on the state map ("Balonne-Condamine").
             'condamine'  => ['name' => 'Balonne–Condamine', 'basin' => '422'],
