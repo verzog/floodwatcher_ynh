@@ -384,3 +384,13 @@ B541098-H,B041534-H,,Glengallan Creek at Rocky Ridge; check: joins the Condamine
 B041532-H,B041534-H,,Connolly Dam (Rosenthal Creek, separate from Sandy Creek); check: joins the Condamine near Warwick
 B541055-H,B541037-H,,Leslie Dam to its tailwater
 B541037-H,B041473-H,,Sandy Creek below Leslie Dam; check: joins the Condamine below Warwick, above Pratten
+# ======== Boyne River (Gladstone) catchment ========
+# Ordered by gauge position (bin/discover_catchment.php boyne, 28/10/2026). The Boyne flows north
+# through Lake Awoonga (Awoonga Dam — Gladstone's water supply; no live dam feed) to Benaraby and
+# the sea near Boyne Island. Diglum Creek feeds Lake Awoonga. Every "check" needs confirming.
+# ---- Boyne River ----
+B539129-H,B539140-H,,Nagoorin to Milton; check
+B539140-H,B539131-H,dam,Milton into Lake Awoonga (Awoonga Dam)
+B539131-H,B539125-H,,Awoonga Dam to Benaraby
+# ---- Diglum Creek ----
+B539130-H,B539131-H,dam,Diglum Creek (Marlua) into Lake Awoonga; check

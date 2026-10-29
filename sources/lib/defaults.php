@@ -49,8 +49,11 @@ return [
         // Dalby, Chinchilla and Roma). From bin/discover_catchment.php condamine, 25/10/2026:
         // these three cover every Condamine river gauge it found. Gauges outside a live
         // catchment's outline (e.g. NSW Border Rivers) are dropped by collect_bom.
+        // IDQ65333: the Central Queensland coast river map (Gladstone north). Added for the Boyne
+        // (Awoonga Dam, Benaraby) and pre-loads the Calliope and Fitzroy gauges as those are built
+        // (bin/discover_catchment.php boyne, 28/10/2026).
         'river_maps'        => ['IDQ65412.html', 'IDQ65420.html', 'IDQ65323.html', 'IDQ65325.html',
-            'IDQ65329.html'],
+            'IDQ65329.html', 'IDQ65333.html'],
         // Rain pages come in threes: 24 hours, since 9am and past hour (checked 25/10/2026 from the
         // period each gauge's figure covers). South-east Queensland: IDQ65413-15; Wide Bay and
         // Burnett, with the Mary River: IDQ65421-23. The inland Condamine–Balonne spans five BoM
@@ -115,6 +118,12 @@ return [
             ],
             'baffle' => [
                 'Baffle Creek', 'Rosedale', 'Miriam Vale', 'Littabella',
+            ],
+            // Boyne River (Gladstone). "Boyne River" alone also matches the Burnett's Boyne River
+            // tributary, so distinctive Gladstone names (Awoonga, Benaraby, Nagoorin) are included;
+            // a warning can belong to both catchments, which is fine.
+            'boyne' => [
+                'Boyne River', 'Awoonga', 'Benaraby', 'Nagoorin', 'Boyne Valley', 'Diglum Creek', 'Ubobo',
             ],
             // Condamine–Balonne (inland). River/creek and town names from the discover run; a few
             // generic creek names (Emu, Sandy) and collision-prone tokens (Tara → Tarampa) are left
@@ -359,6 +368,7 @@ return [
             'burnett'    => ['Bundaberg', 'North Burnett', 'South Burnett', 'Gladstone'],
             'kolan'      => ['Bundaberg'],
             'baffle'     => ['Gladstone', 'Bundaberg'],
+            'boyne'      => ['Gladstone'],
             'condamine'  => ['Toowoomba', 'Western Downs', 'Southern Downs', 'Maranoa', 'Balonne'],
         ],
         'types_all'    => ['Flooding'],          // Always shown.
