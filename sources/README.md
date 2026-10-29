@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.36
+# Flood Watcher (SEQ Flood Watch) — version 0.19.37
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,16 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.37
+
+- **Boyne River (Gladstone) gauges, network and warnings.** Added the Central Queensland coast BoM
+  river map (IDQ65333) so the Boyne's gauges collect — including Lake Awoonga and Benaraby, which
+  weren't on the pages we already pull (this page also pre-loads the Calliope and Fitzroy gauges for
+  the next builds). Added the Boyne river network (through Lake Awoonga to Benaraby), BoM warning
+  keywords and the Gladstone council for road closures. No state gauges (none in basin 133 report
+  heights) and no live dam feed for Awoonga (GAWB/Sunwater, not Seqwater) — its lake level still
+  shows as a gauge.
 
 ## Changes in 0.19.36
 
