@@ -125,6 +125,9 @@ return [
             'boyne' => [
                 'Boyne River', 'Awoonga', 'Benaraby', 'Nagoorin', 'Boyne Valley', 'Diglum Creek', 'Ubobo',
             ],
+            'calliope' => [
+                'Calliope River', 'Calliope', 'Castlehope', 'Leixlip Creek', 'Police Creek',
+            ],
             // Condamine–Balonne (inland). River/creek and town names from the discover run; a few
             // generic creek names (Emu, Sandy) and collision-prone tokens (Tara → Tarampa) are left
             // out and the towns used instead, so a Brisbane or Lockyer warning isn't mis-tagged.
@@ -369,6 +372,7 @@ return [
             'kolan'      => ['Bundaberg'],
             'baffle'     => ['Gladstone', 'Bundaberg'],
             'boyne'      => ['Gladstone'],
+            'calliope'   => ['Gladstone'],
             'condamine'  => ['Toowoomba', 'Western Downs', 'Southern Downs', 'Maranoa', 'Balonne'],
         ],
         'types_all'    => ['Flooding'],          // Always shown.
