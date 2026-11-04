@@ -142,3 +142,6 @@ site_id,name,catchment
 141006A,Mooloolah River at Mooloolah,maroochy
 141009A,North Maroochy River at Eumundi,maroochy
 141010A,Coochin Creek at Mawsons Road,maroochy
+# Calliope stations with river heights (bin/discover_catchment.php calliope, 29/10/2026). The one
+# station sits at the same spot as the BoM Castlehope gauge and merges into one marker.
+132001A,Calliope River at Castlehope,calliope

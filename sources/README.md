@@ -1,4 +1,4 @@
-# Flood Watcher (SEQ Flood Watch) — version 0.19.37
+# Flood Watcher (SEQ Flood Watch) — version 0.19.38
 
 A community flood dashboard for Queensland catchments, starting with the Brisbane River and the
 Mary River. It collects rainfall and river heights from public sources, stores them, and shows
@@ -22,6 +22,14 @@ Moving an existing My Webapp install across: see
 in the package.
 
 The rest of this file covers the older manual set-up in My Webapp.
+
+## Changes in 0.19.38
+
+- **Calliope River (Gladstone).** Added the Calliope's state gauge (Castlehope), BoM warning
+  keywords and the Gladstone council for road closures. Its three BoM river gauges (Castlehope,
+  Leixlip Creek, Police Creek) already arrive via IDQ65333 (added for the Boyne), so no BoM change
+  was needed. No river network (the three gauges are on separate streams with no gauge below any of
+  them, so there are no upstream→downstream links to draw).
 
 ## Changes in 0.19.37
 
